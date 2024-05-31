@@ -1,6 +1,6 @@
 # Fake data for testing
 user = {
-    "id": 1,
+    "id": 49,
     "username": "testing_surname",
     "email": "testing_email",
     "hash": "testing_hash"
@@ -8,6 +8,7 @@ user = {
 
 # Current user credentials to be edited
 edit_user = {
+    "id": 49,
     "username": "edit_username",
     "email": "edit@email.com",
     "hash": "edit_hash"
