@@ -14,7 +14,6 @@ db_table = "testing_users"
 def register(user):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
-
             # Check if user is already registered
             curs.execute(f"SELECT * FROM {db_table} WHERE username = %s AND email = %s;", (user["username"], user["email"]))
             
@@ -24,13 +23,15 @@ def register(user):
 
             # For tests
             curs.execute(f"SELECT * FROM {db_table} WHERE username = %s AND email = %s;", (user["username"], user["email"]))
-            return dict(curs.fetchone())
+            res = dict(curs.fetchone())
+
+    return res
 
 
 # Edit user credentials
 def edit_user_data(user, edit_user):
     with psycopg2.connect(db) as conn:
-        with conn.cursor() as curs:
+        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
             # Get current data of a user
             # Replace some user data with a given one
             # User may update either his username, email, or hash
