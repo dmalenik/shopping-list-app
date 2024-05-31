@@ -14,13 +14,12 @@ db_table = "testing_users"
 def register(user):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
-            # Check if user is already registered
             curs.execute(f"SELECT * FROM {db_table} WHERE username = %s AND email = %s;", (user["username"], user["email"]))
             
+            # Check if user is already registered
             if not curs.fetchone():
                 curs.execute(f"INSERT INTO {db_table} (username, email, hash) VALUES (%s, %s, %s);", (user["username"], user["email"], user["hash"]))
             
-
             # For tests
             curs.execute(f"SELECT * FROM {db_table} WHERE username = %s AND email = %s;", (user["username"], user["email"]))
             res = dict(curs.fetchone())
