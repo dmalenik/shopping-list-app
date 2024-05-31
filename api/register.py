@@ -29,24 +29,23 @@ def register(user):
 
 
 # Edit user credentials
+# Get current user data
 def edit_user_data(user, edit_user):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
-            # Get current data of a user
-            # Replace some user data with a given one
-            # User may update either his username, email, or hash
             if edit_user["username"]:
                 curs.execute(f"UPDATE {db_table} SET username = %s WHERE username = %s AND email = %s;", (edit_user["username"], user["username"], user["email"]))
 
             if edit_user["email"]:
-                curs.execute(f"UPDATE {db_table} SET email = %s WHERE username = %s AND email = %s;", (edit_user["email"], user["username"], user["email"]))
+                curs.execute(f"UPDATE {db_table} SET email = %s WHERE username = %s AND email = %s;", (edit_user["email"], edit_user["username"], user["email"]))
             
             if edit_user["hash"]:
-                curs.execute(f"UPDATE {db_table} SET hash = %s WHERE username = %s AND email = %s;", (edit_user["username"], user["username"], user["email"]))
-
-
+                curs.execute(f"UPDATE {db_table} SET hash = %s WHERE username = %s AND email = %s;", (edit_user["username"], edit_user["username"], edit_user["email"]))
+            
             # For tests
             curs.execute(f"SELECT * FROM {db_table} WHERE username = %s AND email = %s;", (edit_user["username"], edit_user["email"]))
-            return curs.fetchone()
+            res = dict(curs.fetchone())
+
+    return res
         
 
