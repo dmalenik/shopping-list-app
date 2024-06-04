@@ -52,3 +52,14 @@ def edit_dish(dish, edit_dish):
     return res
 
 
+def delete_dish(dish):
+    with psycopg2.connect(db) as conn:
+        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
+            curs.execute(f"DELETE FROM {db_table} WHERE dish = %s AND userid = %s RETURNING dish", (dish["dish"], dish["userid"]))
+
+            # Fore tests
+            res = dict(curs.fetchone())
+
+    return res["dish"]
+
+
