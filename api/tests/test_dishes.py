@@ -2,7 +2,7 @@ import sys
 import os
 
 sys.path.append(os.path.abspath("/shopping-list-app/api/"))
-from handle_dishes import add_dish, edit_dish
+from handle_dishes import add_dish, edit_dish, delete_dish
 
 # Create class with tests
 class TestDishes:
@@ -35,4 +35,6 @@ class TestDishes:
     def test_edit_dish(self):
         assert edit_dish(self.dish, self.edit_dish) == self.edit_dish
 
+    def test_delete_dish(self):
+        assert delete_dish(self.edit_dish) == self.edit_dish["dish"]
 
