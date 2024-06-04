@@ -8,7 +8,7 @@ CREATE TABLE users (
 CREATE TABLE dishes (
 	id SERIAL, 
 	name VARCHAR(254) NOT NULL, 
-	components hstore[] NOT NULL, 
+	components text[] NOT NULL, 
 	userid INT NOT NULL, 
 	PRIMARY KEY(id), 
 	CONSTRAINT userid FOREIGN KEY(userid) REFERENCES users(id)
