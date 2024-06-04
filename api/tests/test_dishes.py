@@ -8,7 +8,7 @@ from handle_dishes import add_dish, edit_dish, delete_dish
 class TestDishes:
     # Define dishes data for testing
     dish = {
-        "name": "dish1",
+        "dish": "dish1",
         "components": [
             {"name": "component1", "unit": "kg", "size": 20}, 
             {"name": "component2", "unit": "gr", "size": 30}, 
@@ -18,7 +18,7 @@ class TestDishes:
     }
 
     edit_dish = {
-        "name": "dish2",
+        "dish": "dish2",
         "components": [
             {"name": "component11", "unit": "kg", "size": 100500}, 
             {"name": "component22", "unit": "gr", "size": 999}, 
@@ -37,4 +37,5 @@ class TestDishes:
 
     def test_delete_dish(self):
         assert delete_dish(self.edit_dish) == self.edit_dish["dish"]
+
 
