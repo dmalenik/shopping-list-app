@@ -9,7 +9,6 @@ class TestLists:
     # Data for testing
     list = {
         "list": "title",
-        "date": "date",
         "elements": [
             {"name": "component1", "unit": "kg", "size": 21},
             {"name": "component2", "unit": "gr", "size": 32},
