@@ -49,3 +49,16 @@ def edit_list(list, edit_list):
     return res
 
 
+def delete_list(list):
+    with psycopg2.connect(db) as conn:
+        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
+            curs.execute(f"DELETE FROM {db_table} WHERE list = %s AND userid = %s RETURNING list, elements, userid;", (list["list"], list["userid"]))
+
+            # For tests
+            res = dict(curs.fetchone())
+            # Decode string to dict
+            res["elements"] = [json.loads(element) for element in res["elements"]]
+
+    return res
+
+
