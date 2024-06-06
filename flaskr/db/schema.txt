@@ -1,0 +1,25 @@
+CREATE TABLE users (
+	id SERIAL PRIMARY KEY, 
+	username VARCHAR(20) NOT NULL, 
+	email VARCHAR(100) NOT NULL, 
+	hash VARCHAR(254) NOT NULL
+);
+
+CREATE TABLE dishes (
+	id SERIAL, 
+	name VARCHAR(254) NOT NULL, 
+	components text[] NOT NULL, 
+	userid INT NOT NULL, 
+	PRIMARY KEY(id), 
+	CONSTRAINT userid FOREIGN KEY(userid) REFERENCES users(id)
+);
+
+CREATE TABLE lists (
+	id SERIAL, 
+	list VARCHAR(200) NOT NULL, 
+	date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+	elements text[] NOT NULL,
+	userid INT NOT NULL, 
+	PRIMARY KEY(id), 
+	CONSTRAINT userid FOREIGN KEY(userid) REFERENCES users(id)
+);
