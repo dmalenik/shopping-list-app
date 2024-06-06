@@ -1,8 +1,8 @@
 import os
 import sys
 
-sys.path.append(os.path.abspath("/shopping-list-app/api/"))
-from lists import create_list, edit_list, delete_list
+sys.path.append(os.path.abspath("../flaskr/"))
+from db.lists import create_list, edit_list, delete_list
 
 
 class TestLists:

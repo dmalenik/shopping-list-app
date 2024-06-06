@@ -1,8 +1,8 @@
 import os
 import sys
 
-sys.path.append(os.path.abspath("/shopping-list-app/api/"))
-from register import register, edit_user_data, delete_user_data
+sys.path.append(os.path.abspath("../flaskr/"))
+from db.users import register, edit_user_data, delete_user_data
 
 
 class TestRegister:
