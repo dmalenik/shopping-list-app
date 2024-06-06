@@ -27,3 +27,25 @@ def create_list(list):
 
     return res
 
+
+def edit_list(list, edit_list):
+    with psycopg2.connect(db) as conn:
+        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
+            # Edit list name
+            if edit_list["list"]:
+                curs.execute(f"UPDATE {db_table} SET list = %s WHERE list = %s AND userid = %s;", (edit_list["list"], list["list"], list["userid"]))
+            
+            # Edit list elements
+            if edit_list["elements"]:
+                list_to_string_elements = [json.dumps(element) for element in edit_list["elements"]]
+                curs.execute(f"UPDATE {db_table} SET elements = %s WHERE list = %s AND userid = %s;", (list_to_string_elements, edit_list["list"], edit_list["userid"]))
+            
+
+            # For tests
+            curs.execute(f"SELECT list, elements, userid FROM {db_table} WHERE list = %s AND userid = %s;", (edit_list["list"], edit_list["userid"]))
+            res = dict(curs.fetchone())
+            res["elements"] = [json.loads(element) for element in res["elements"]]
+
+    return res
+
+
