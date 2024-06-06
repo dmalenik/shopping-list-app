@@ -2,7 +2,7 @@ import sys
 import os
 
 sys.path.append(os.path.abspath("/shopping-list-app/api/"))
-from handle_dishes import add_dish, edit_dish, delete_dish
+from dishes import add_dish, edit_dish, delete_dish
 
 # Create class with tests
 class TestDishes:

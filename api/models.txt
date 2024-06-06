@@ -16,9 +16,10 @@ CREATE TABLE dishes (
 
 CREATE TABLE lists (
 	id SERIAL, 
-	name VARCHAR(200) NOT NULL, 
-	date TIMESTAMP NOT NULL, 
-	list hstore[] NOT NULL, 
+	list VARCHAR(200) NOT NULL, 
+	date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+	elements text[] NOT NULL,
+	userid INT NOT NULL, 
 	PRIMARY KEY(id), 
 	CONSTRAINT userid FOREIGN KEY(userid) REFERENCES users(id)
 );
