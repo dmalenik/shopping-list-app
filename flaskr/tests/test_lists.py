@@ -2,7 +2,7 @@ import os
 import sys
 
 sys.path.append(os.path.abspath("../flaskr/"))
-from db.lists import create_list, edit_list, delete_list
+from db.lists import create_list, edit_list, delete_list, add_dish_to_list
 
 
 class TestLists:
@@ -27,6 +27,16 @@ class TestLists:
         "userid": 59
     }
 
+    dish = {
+        "dish": "dish123",
+        "components": [
+            {"name": "ingridient123", "unit": "kg", "size": 1005001}, 
+            {"name": "ingridient456", "unit": "gr", "size": 1005002}, 
+            {"name": "ingridient789", "unit": "pieces", "size": 1005003}
+        ],
+        "userid": 59
+    }
+
 
     # Test cases
     def test_create_list(self):
@@ -37,4 +47,8 @@ class TestLists:
 
     def test_delete_list(self):
         assert delete_list(self.edit_list) == self.edit_list
+    
+    # Check if dish components were added to shopping list items
+    def test_add_dish_to_list(self):
+        assert add_dish_to_list(self.dish, self.list) == True
 
