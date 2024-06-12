@@ -26,6 +26,41 @@ app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(seconds=60 )
 app.config["SESSION_USE_SIGNER"] = True
 
 Session(app)
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    session.clear()
+
+    if request.method == "POST":
+        credentials = {
+            "username": request.form["username"],
+            "password": request.form["password"]
+        }
+
+        if login_credentials_valid(credentials):
+            session["name"] = credentials["username"]
+
+            return redirect(url_for("profile", username=session["name"]))
+        
+        else:
+            return redirect(url_for("error"), type="login")
+
+    # Is a temporary solution for front-end on GET method
+    return '''
+        <form action="/login" method="post">
+            <input name="username" placeholder="Name"/>
+            <input type="password" name="password" placeholder="password"/>
+            <button type="submit">Log in</button>
+        </form>
+    '''
+
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    
+    return redirect("/login")
+
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
