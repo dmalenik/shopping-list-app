@@ -27,3 +27,17 @@ def login_credentials_valid(credentials):
     return False
 
 
+# Make server-side validation of data provided before adding it to db
+def register_credentials_valid(credentials):
+    # Check if credentials are not empty
+    # Check if username is already present in db
+    with psycopg2.connect(db) as conn:
+        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
+            curs.execute(f"SELECT username FROM {db_table} WHERE username = %s;", (credentials["username"],))
+            res = dict(curs.fetchone())
+            if not res and credentials["username"] and credentials["email"] and credentials["password"]:
+                return True
+    
+    return False
+
+
