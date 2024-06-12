@@ -26,6 +26,18 @@ app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(seconds=60 )
 app.config["SESSION_USE_SIGNER"] = True
 
 Session(app)
+
+
+@app.route("/profile/<username>")
+def profile(username):
+    # Is a temporary solution for front-end
+    return f'''
+        {username}'s profile
+
+        <a href="/logout">Logout</a>
+    '''
+
+
 @app.route("/error/<type>")
 def error(type):
     # Is a temporary solution for front-end
