@@ -26,6 +26,15 @@ app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(seconds=60 )
 app.config["SESSION_USE_SIGNER"] = True
 
 Session(app)
+@app.route("/error/<type>")
+def error(type):
+    # Is a temporary solution for front-end
+    return f'''
+        Invalid {type}! Try again!
+        Go to: <a href={url_for(type)}>{type}</a>
+    '''
+
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     session.clear()
