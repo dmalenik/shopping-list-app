@@ -2,6 +2,7 @@ from os import environ
 
 import psycopg2
 import psycopg2.extras
+from werkzeug.security import generate_password_hash
 
 from dotenv import load_dotenv
 
@@ -18,13 +19,8 @@ def register(user):
             # Check if user is already registered
             curs.execute(f"SELECT * FROM {db_table} WHERE username = %s AND email = %s;", (user["username"], user["email"]))
             if not curs.fetchone():
-                curs.execute(f"INSERT INTO {db_table} (username, email, hash) VALUES (%s, %s, %s);", (user["username"], user["email"], user["hash"]))
-            
-            # For tests
-            curs.execute(f"SELECT username, email, hash FROM {db_table} WHERE username = %s AND email = %s;", (user["username"], user["email"]))
-            res = dict(curs.fetchone())
-
-    return res
+                hash = generate_password_hash(user["hash"])
+                curs.execute(f"INSERT INTO {db_table} (username, email, hash) VALUES (%s, %s, %s);", (user["username"], user["email"], hash))
 
 
 # Edit user credentials
