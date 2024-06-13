@@ -14,9 +14,6 @@ from helpers import login_credentials_valid, register_credentials_valid
 app = Flask(__name__)
 
 
-load_dotenv()
-app.secret_key = os.environ["SECRET_KEY"]
-
 # Server-side session settings
 # Responses are stored in a server storage
 app.config["SESSION_TYPE"] = "filesystem"
@@ -49,8 +46,10 @@ def error(type):
     '''
 
 
+# Login
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    # Restart session every time a user logs in
     session.clear()
 
     if request.method == "POST":
@@ -77,13 +76,7 @@ def login():
     '''
 
 
-@app.route("/logout")
-def logout():
-    session.clear()
-    
-    return redirect("/login")
-
-
+# Enter page of the app
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
