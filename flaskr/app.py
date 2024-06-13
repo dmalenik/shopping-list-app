@@ -18,26 +18,28 @@ load_dotenv()
 app.secret_key = os.environ["SECRET_KEY"]
 
 # Server-side session settings
+# Responses are stored in a server storage
 app.config["SESSION_TYPE"] = "filesystem"
-app.config["SESSION_FILE_THRESHOLD"] = 1
-app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(seconds=60 )
-# Secret key was configured
+# User remains logged in for 1 hour
+app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(hours=1)
 # Use it to cryptographically-sign cookies
 app.config["SESSION_USE_SIGNER"] = True
 
+# Secret key was configured
+load_dotenv()
+app.secret_key = os.environ["SECRET_KEY"]
+
 Session(app)
 
+# Use Ctrl+F to navigate through views
 
-@app.route("/profile/<username>")
-def profile(username):
-    # Is a temporary solution for front-end
-    return f'''
-        {username}'s profile
-
-        <a href="/logout">Logout</a>
-    '''
+# Modify requests
+@app.before_request
+def func():
+    session.modified = True
 
 
+# Display error
 @app.route("/error/<type>")
 def error(type):
     # Is a temporary solution for front-end
@@ -109,6 +111,11 @@ def index():
         </form>
     '''
 
+    # Check if session object length is 1
+    # If true - redirect to logout
+    # Set this somwhere globally
+    if "name" not in session:
+        return redirect(url_for("logout"))
 # Change user data
 # Delete user data
 @app.route("/profile/<username>/change", methods=["GET", "POST"])
@@ -165,5 +172,12 @@ def change_user(username):
             <button type="submit">Delete profile</button>
         </form>
     '''
+
+# Logout user
+@app.route("/logout")
+def logout():
+    session.clear()
+    
+    return redirect("/login")
 
 
