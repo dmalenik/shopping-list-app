@@ -111,11 +111,23 @@ def index():
         </form>
     '''
 
+
+# Display user profile
+@app.route("/profile/<username>")
+def profile(username):
     # Check if session object length is 1
     # If true - redirect to logout
     # Set this somwhere globally
     if "name" not in session:
         return redirect(url_for("logout"))
+    # Is a temporary solution for front-end
+    return f'''
+        {username}'s profile
+
+        <a href="/logout">Logout</a>
+        <a href={url_for("change_user", username=username)}>Change user's data</a>
+    '''
+
 # Change user data
 # Delete user data
 @app.route("/profile/<username>/change", methods=["GET", "POST"])
