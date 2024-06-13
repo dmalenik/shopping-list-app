@@ -16,7 +16,6 @@ db_table = "testing_users"
 def register(user):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
-            # Check if user is already registered
             curs.execute(f"SELECT * FROM {db_table} WHERE username = %s AND email = %s;", (user["username"], user["email"]))
             if not curs.fetchone():
                 hash = generate_password_hash(user["hash"])
@@ -24,7 +23,6 @@ def register(user):
 
 
 # Edit user credentials
-# Get current user data
 def edit_user_data(user, edit_user):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
@@ -55,10 +53,6 @@ def edit_user_data(user, edit_user):
 def delete_user_data(user):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
-            curs.execute(f"DELETE FROM {db_table} WHERE username = %s AND email = %s RETURNING username, email, hash", (user["username"], user["email"]))
-            # For tests
-            res = dict(curs.fetchone())
-
-    return res
+            curs.execute(f"DELETE FROM {db_table} WHERE username = %s;", (user["username"],))
         
 
