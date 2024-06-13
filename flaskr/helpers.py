@@ -15,22 +15,20 @@ db_table = "testing_users"
 def login_credentials_valid(credentials):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
-            # Get name and password from db of specific user
             curs.execute(f"SELECT username, hash FROM {db_table} WHERE username = %s;", (credentials["username"],))
-            res = dict(curs.fetchone())
-            # Compare data to credentials provided in the input
-            # Check if name matches the name from db
-            # Check if password matches the password from db
-            if res and res["username"] == credentials["username"] and check_password_hash(res["hash"], credentials["password"]):
-                return True
+            res = curs.fetchone()
+            
+            # Handle NoneType error
+            if res:
+                res = dict(res)
+                # Compare data to credentials provided in the input
+                if res["username"] == credentials["username"] and check_password_hash(res["hash"], credentials["password"]):
+                    return True
     
     return False
 
 
-# Make server-side validation of data provided before adding it to db
 def register_credentials_valid(credentials):
-    # Check if credentials are not empty
-    # Check if username is already present in db
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
             curs.execute(f"SELECT username FROM {db_table} WHERE username = %s;", (credentials["username"],))
