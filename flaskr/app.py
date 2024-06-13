@@ -7,7 +7,7 @@ from datetime import timedelta
 from dotenv import load_dotenv
 
 sys.path.append(os.path.abspath("/shopping-list-app/flaskr/db"))
-from users import register
+from users import register, edit_user_data, delete_user_data
 from helpers import login_credentials_valid, register_credentials_valid
 
 
@@ -106,6 +106,63 @@ def index():
             <input name="email" placeholder="Email"/>
             <input type="password" name="password" placeholder="password"/>
             <button type="submit">Submit</button>
+        </form>
+    '''
+
+# Change user data
+# Delete user data
+@app.route("/profile/<username>/change", methods=["GET", "POST"])
+def change_user(username):
+    if "name" not in session:
+        return redirect(url_for("logout"))
+
+    if request.method == "POST":
+        # Get data
+        # Dmytro Malienik, not Dmytro
+        # Get data from session
+        # Expand session time
+        user = {
+            "username": session["name"],
+            "action": request.form["action"]
+        }
+
+        # Edit user data
+        if user["action"] == "edit":
+            edit_user = {
+                "username": request.form["username"],
+                "email": request.form["email"],
+                "password": request.form["password"],
+            }
+
+            # Update data in db
+            edit_user_data(user, edit_user)
+
+            return redirect(url_for("logout"))
+        
+        # Delete user data
+        if user["action"] == "delete":
+            delete_user_data(user)
+
+            return redirect(url_for("index"))
+    
+    # Is a temporary solution for front-end
+    return f'''
+        {username}, change you data here!
+
+        <form action="/profile/<username>/change" method="post">
+            <input name="username" placeholder="Name"/>
+            <input name="email" placeholder="Email"/>
+            <input type="password" name="password" placeholder="password"/>
+            <input type="hidden" name="action" value="edit"/>
+            <button type="submit">Change data</button>
+        </form>
+
+        {username}, delete your data here!
+
+        <form action="/profile/<username>/change" method="post">
+            <input type="hidden" name="queryname" value={username}/>
+            <input type="hidden" name="action" value="delete"/>
+            <button type="submit">Delete profile</button>
         </form>
     '''
 
