@@ -65,7 +65,7 @@ def login():
             return redirect(url_for("profile", username=session["name"]))
         
         else:
-            return redirect(url_for("error"), type="login")
+            return redirect(url_for("error", type="login"))
 
     # Is a temporary solution for front-end on GET method
     return '''
