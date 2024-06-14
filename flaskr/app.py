@@ -61,7 +61,7 @@ def login():
         if login_credentials_valid(credentials):
             session["name"] = credentials["username"]
 
-            return redirect(url_for("profile", username=session["name"]))
+            return redirect(url_for("profile"))
         
         else:
             return redirect(url_for("error", type="login"))
@@ -105,26 +105,18 @@ def index():
     '''
 
 
-# Display user profile
-@app.route("/profile/<username>")
-def profile(username):
-    # Check if session object length is 1
-    # If true - redirect to logout
-    # Set this somwhere globally
-    if "name" not in session:
-        return redirect(url_for("logout"))
-    # Is a temporary solution for front-end
-    return f'''
-        {username}'s profile
+# Logout user
+@app.route("/logout")
+def logout():
+    session.clear()
+    
+    return redirect("/login")
 
-        <a href="/logout">Logout</a>
-        <a href={url_for("change_user", username=username)}>Change user's data</a>
-    '''
 
 # Change user data
 # Delete user data
-@app.route("/profile/<username>/change", methods=["GET", "POST"])
-def change_user(username):
+@app.route("/profile/change", methods=["GET", "POST"])
+def change_user():
     if "name" not in session:
         return redirect(url_for("logout"))
 
@@ -159,7 +151,7 @@ def change_user(username):
     
     # Is a temporary solution for front-end
     return f'''
-        {username}, change you data here!
+        {session["name"]}, change you data here!
 
         <form action="/profile/<username>/change" method="post">
             <input name="username" placeholder="Name"/>
@@ -169,20 +161,32 @@ def change_user(username):
             <button type="submit">Change data</button>
         </form>
 
-        {username}, delete your data here!
+        {session["name"]}, delete your data here!
 
         <form action="/profile/<username>/change" method="post">
-            <input type="hidden" name="queryname" value={username}/>
+            <input type="hidden" name="queryname" value={session["name"]}/>
             <input type="hidden" name="action" value="delete"/>
             <button type="submit">Delete profile</button>
         </form>
     '''
 
-# Logout user
-@app.route("/logout")
-def logout():
-    session.clear()
-    
-    return redirect("/login")
+
+# Display user profile
+@app.route("/profile")
+def profile():
+    # Check if session object length is 1
+    # If true - redirect to logout
+    # Set this somwhere globally
+    if "name" not in session:
+        return redirect(url_for("logout"))
+
+
+    # Is a temporary solution for front-end
+    return f'''
+        {session["name"]}'s profile
+
+        <a href="/logout">Logout</a>
+        <a href={url_for("change_user")}>Change user's data</a>
+    '''
 
 
