@@ -11,6 +11,15 @@ load_dotenv()
 db = f"dbname={environ["DATABASE"]} host={environ["DATABASE_HOST"]} user={environ["DATABASE_USER"]} password={environ["DATABASE_PASSWORD"]} port={environ["DATABASE_PORT"]}"
 db_table = "testing_dishes"
 
+# Get dishes list
+def get_dishes_list(user):
+    with psycopg2.connect(db) as conn:
+        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
+            curs.execute(f"SELECT * FROM {db_table} WHERE userid = %s;", (user["userid"],))
+            res = curs.fetchall()
+    
+    return res if res else "No dishes"
+
 
 # Add dish data to DB
 def add_dish(dish):
@@ -20,45 +29,31 @@ def add_dish(dish):
             list_to_json_components = [json.dumps(component) for component in dish["components"]]
             curs.execute(f"INSERT INTO {db_table}(dish, components, userid) VALUES (%s, %s, %s);", (dish["dish"], list_to_json_components, dish["userid"]))
 
-            # For tests
-            curs.execute(f"SELECT dish, components, userid FROM {db_table};")
-            res = dict(curs.fetchone())
-            # Decode JSON
-            res["components"] = [json.loads(component) for component in res["components"]]
-    
-    return res
-
 
 # Update dish data
-def edit_dish(dish, edit_dish):
+def edit_dish(dish, dish_edit):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
             # Put edit_dish data into the DB
-            if edit_dish["dish"]:
-                curs.execute(f"UPDATE {db_table} SET dish = %s WHERE dish = %s AND userid = %s", (edit_dish["dish"], dish["dish"], dish["userid"]))
+            dish_update = False
+            if dish_edit["dish"]:
+                curs.execute(f"UPDATE {db_table} SET dish = %s WHERE dish = %s AND userid = %s;", (dish_edit["dish"], dish["dish"], dish["userid"]))
+                dish_update = True
 
-            if edit_dish["components"]:
+            if dish_edit["components"]:
                 # Convert components key to JSON
-                list_to_json_components = [json.dumps(component) for component in edit_dish["components"]]
-                curs.execute(f"UPDATE {db_table} SET components = %s WHERE dish = %s AND userid = %s", (list_to_json_components, edit_dish["dish"], dish["userid"]))
+                list_to_json_components = [json.dumps(component) for component in dish_edit["components"]]
 
-            # For tests
-            curs.execute(f"SELECT dish, components, userid FROM {db_table}")
-            res = dict(curs.fetchone())
-            # Decode JSON data
-            res["components"] = [json.loads(component) for component in res["components"]]
-
-    return res
+                if dish_update:
+                    curs.execute(f"UPDATE {db_table} SET components = %s WHERE dish = %s AND userid = %s;", (list_to_json_components, dish_edit["dish"], dish["userid"]))
+                
+                else:
+                    curs.execute(f"UPDATE {db_table} SET components = %s WHERE dish = %s AND userid = %s;", (list_to_json_components, dish["dish"], dish["userid"]))
 
 
 def delete_dish(dish):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
-            curs.execute(f"DELETE FROM {db_table} WHERE dish = %s AND userid = %s RETURNING dish", (dish["dish"], dish["userid"]))
-
-            # Fore tests
-            res = dict(curs.fetchone())
-
-    return res["dish"]
+            curs.execute(f"DELETE FROM {db_table} WHERE dish = %s AND userid = %s;", (dish["dish"], dish["userid"]))
 
 
