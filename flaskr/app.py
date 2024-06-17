@@ -171,24 +171,21 @@ def profile():
 
 
 # Change user data
-# Delete user data
-@app.route("/profile/change", methods=["GET", "POST"])
-def change_user():
-    if "name" not in session:
+@app.route("/profile/update", methods=["GET", "POST"])
+def update_user():
+    # Check if session is valid
+    if "id" not in session:
         return redirect(url_for("logout"))
 
     if request.method == "POST":
-        # Get data
         # Dmytro Malienik, not Dmytro
-        # Get data from session
-        # Expand session time
-        user = {
+        query = {
             "username": session["name"],
             "action": request.form["action"]
         }
 
-        # Edit user data
-        if user["action"] == "edit":
+        # Update user data
+        if query["action"] == "edit":
             edit_user = {
                 "username": request.form["username"],
                 "email": request.form["email"],
@@ -196,13 +193,13 @@ def change_user():
             }
 
             # Update data in db
-            edit_user_data(user, edit_user)
+            edit_user_data(query, edit_user)
 
             return redirect(url_for("logout"))
         
         # Delete user data
-        if user["action"] == "delete":
-            delete_user_data(user)
+        if query["action"] == "delete":
+            delete_user_data(query)
 
             return redirect(url_for("index"))
     
@@ -210,7 +207,7 @@ def change_user():
     return f'''
         {session["name"]}, change you data here!
 
-        <form action="/profile/<username>/change" method="post">
+        <form action="/profile/update" method="post">
             <input name="username" placeholder="Name"/>
             <input name="email" placeholder="Email"/>
             <input type="password" name="password" placeholder="password"/>
@@ -220,7 +217,7 @@ def change_user():
 
         {session["name"]}, delete your data here!
 
-        <form action="/profile/<username>/change" method="post">
+        <form action="/profile/update" method="post">
             <input type="hidden" name="queryname" value={session["name"]}/>
             <input type="hidden" name="action" value="delete"/>
             <button type="submit">Delete profile</button>
