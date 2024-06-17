@@ -39,14 +39,14 @@ def get_user_data(credentials):
 def edit_user_data(user, edit_user):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
-            username_changed = False
+            username_change = False
             if edit_user["username"]:
                 curs.execute(f"UPDATE {db_table} SET username = %s WHERE username = %s;", (edit_user["username"], user["username"]))
-                username_changed = True
+                username_change = True
 
             if edit_user["email"]:
 
-                if username_changed:
+                if username_change:
                     curs.execute(f"UPDATE {db_table} SET email = %s WHERE username = %s;", (edit_user["email"], edit_user["username"]))
 
                 else:
@@ -55,7 +55,7 @@ def edit_user_data(user, edit_user):
             if edit_user["password"]:
                 hash = generate_password_hash(edit_user["password"])
 
-                if username_changed:
+                if username_change:
                     curs.execute(f"UPDATE {db_table} SET hash = %s WHERE username = %s;", (hash, edit_user["username"]))
 
                 else:
