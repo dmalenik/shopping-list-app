@@ -29,14 +29,6 @@ def add_dish(dish):
             list_to_json_components = [json.dumps(component) for component in dish["components"]]
             curs.execute(f"INSERT INTO {db_table}(dish, components, userid) VALUES (%s, %s, %s);", (dish["dish"], list_to_json_components, dish["userid"]))
 
-            # For tests
-            curs.execute(f"SELECT dish, components, userid FROM {db_table};")
-            res = dict(curs.fetchone())
-            # Decode JSON
-            res["components"] = [json.loads(component) for component in res["components"]]
-    
-    return res
-
 
 # Update dish data
 def edit_dish(dish, dish_edit):
