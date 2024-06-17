@@ -111,12 +111,63 @@ def index():
     '''
 
 
+# Login
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    # Restart session every time a user logs in
+    session.clear()
+
+    if request.method == "POST":
+        credentials = {
+            "username": request.form["username"],
+            "password": request.form["password"]
+        }
+
+        if login_credentials_valid(credentials):
+            # Get logged in user data
+            user = get_user_data(credentials)
+            # Assign to session data user's name and id
+            session["id"] = user["id"]
+            session["name"] = user["username"]
+
+            return redirect(url_for("profile"))
+        
+        else:
+            return redirect(url_for("error", type="login"))
+
+    # Is a temporary solution for front-end on GET method
+    return '''
+        <form action="/login" method="post">
+            <input name="username" placeholder="Name"/>
+            <input type="password" name="password" placeholder="password"/>
+            <button type="submit">Log in</button>
+        </form>
+    '''
+
+
 # Logout user
 @app.route("/logout")
 def logout():
     session.clear()
     
     return redirect("/login")
+
+
+# Display user profile
+@app.route("/profile")
+def profile():
+    # Check if session is valid
+    if "id" not in session:
+        return redirect(url_for("logout"))
+
+    # Is a temporary solution for front-end
+    return f'''
+        {session["name"]}'s profile
+
+        <a href={url_for("update_user")}>Change user's data</a>
+        <a href={url_for("dishes")}>See dishes list</a>
+        <a href="/logout">Logout</a>
+    '''
 
 
 # Change user data
@@ -182,6 +233,13 @@ def change_user():
     return f'''
             querydish, newdishname, *components, userid, action = request.form.items(multi=True)
             querydish, userid, action = request.form.items(multi=True)
+# Display error
+@app.route("/error/<type>")
+def error(type):
+    # Is a temporary solution for front-end
+    return f'''
+        Invalid {type}! Try again!
+        Go to: <a href={url_for(type)}>{type}</a>
     '''
 
 
