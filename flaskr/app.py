@@ -1,7 +1,7 @@
 import os
 import sys
 
-from flask import Flask, request, redirect, url_for, session
+from flask import Flask, request, redirect, url_for, session, Request
 from flask_session import Session
 from datetime import timedelta
 from dotenv import load_dotenv
@@ -25,6 +25,12 @@ app.config["SESSION_USE_SIGNER"] = True
 # Secret key was configured
 load_dotenv()
 app.secret_key = os.environ["SECRET_KEY"]
+
+# Change the order of grouped values which appear in request
+class OrderedParamsContainer(Request):
+    parameter_storage_class = ImmutableOrderedMultiDict
+
+app.request_class = OrderedParamsContainer
 
 Session(app)
 
@@ -171,22 +177,11 @@ def change_user():
     '''
 
 
-# Display user profile
-@app.route("/profile")
-def profile():
-    # Check if session object length is 1
-    # If true - redirect to logout
-    # Set this somwhere globally
-    if "name" not in session:
-        return redirect(url_for("logout"))
-
-
+        dish_name, *components, userid = request.form.items(multi=True)
     # Is a temporary solution for front-end
     return f'''
-        {session["name"]}'s profile
-
-        <a href="/logout">Logout</a>
-        <a href={url_for("change_user")}>Change user's data</a>
+            querydish, newdishname, *components, userid, action = request.form.items(multi=True)
+            querydish, userid, action = request.form.items(multi=True)
     '''
 
 
