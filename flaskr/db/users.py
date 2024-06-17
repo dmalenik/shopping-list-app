@@ -22,6 +22,19 @@ def register(user):
                 curs.execute(f"INSERT INTO {db_table} (username, email, hash) VALUES (%s, %s, %s);", (user["username"], user["email"], hash))
 
 
+# Get logged in user's data
+def get_user_data(credentials):
+    with psycopg2.connect(db) as conn:
+        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
+            curs.execute(f"SELECT id, username FROM {db_table} WHERE username = %s;", (credentials["username"],))
+
+            res = curs.fetchone()
+            if res:
+                res = dict(res)
+        
+    return res
+
+
 # Edit user credentials
 def edit_user_data(user, edit_user):
     with psycopg2.connect(db) as conn:
