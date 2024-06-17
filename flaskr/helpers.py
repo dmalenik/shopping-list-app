@@ -39,3 +39,17 @@ def register_credentials_valid(credentials):
     return False
 
 
+# Implement helper functions for dish data handling
+
+
+def dish_exists(dish):
+    with psycopg2.connect(db) as conn:
+        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:    
+            curs.execute(f"SELECT dish FROM testing_dishes WHERE dish = %s;", (dish["dish"],))
+
+            res = curs.fetchone()
+            if res:
+                return True
+    
+    return False
+

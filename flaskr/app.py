@@ -7,8 +7,8 @@ from datetime import timedelta
 from dotenv import load_dotenv
 
 sys.path.append(os.path.abspath("/shopping-list-app/flaskr/db"))
-from users import register, edit_user_data, delete_user_data
-from helpers import login_credentials_valid, register_credentials_valid
+from helpers import login_credentials_valid, register_credentials_valid, dish_exists
+from dishes import get_dishes_list, add_dish, edit_dish, delete_dish
 
 
 app = Flask(__name__)
@@ -225,11 +225,202 @@ def update_user():
     '''
 
 
-        dish_name, *components, userid = request.form.items(multi=True)
+# Implement routes related to dishes
+
+
+# Create a route to see dishes
+@app.route("/profile/dishes")
+def dishes():
+    # Check if session is valid
+    if "id" not in session:
+        return redirect(url_for("login"))
+
+    user = {
+        "userid": session["id"]
+    }
+    # Get dishes list for current user
+    dishes_list = get_dishes_list(user)
     # Is a temporary solution for front-end
     return f'''
+        Dishes list
+
+        {dishes_list}
+        <a href={url_for("dish_add")}>Add new dish</a>
+        <a href={url_for("update_dish")}>Update dish</a>
+        <a href={url_for("profile")}>Go back to profile</a>
+    '''
+
+
+# Create a route to add new dish
+@app.route("/profile/dishes/add", methods=["GET", "POST"])
+def dish_add():
+    # Check if session is valid
+    if "id" not in session:
+        return redirect(url_for("login"))
+    
+    if request.method == "POST":
+        # Create dish object
+        dish = dict()
+
+        dish_name, *components, userid = request.form.items(multi=True)
+
+        dish["dish"] = dish_name[1]
+
+        dish["components"] = []
+        for i in range(0, len(components), 3):
+            component = dict()
+
+            for k in range(i, i+3):
+                component[components[k][0]] = components[k][1]
+            
+            dish["components"].append(component)
+
+        userid = int(userid[1].replace("/", ""))
+        dish["userid"] = userid
+        # Check if dish with the same name exists
+        if dish_exists(dish):
+            return redirect(url_for("error", type="dish_add"))
+        
+        else:
+            # Was error due to similar with dish_add function names
+            add_dish(dish)
+
+            return redirect(url_for("dishes"))
+    # Is a temporary solution for front-end
+    return f'''
+        <form action="/profile/dishes/add" method="post">
+            <input name="dish" placeholder="Dish"/>
+
+            Components:
+
+            <fieldset id={os.urandom(2)}>
+                <input name="name" placeholder="Name"/>
+                <input name="unit" placeholder="Unit"/>
+                <input name="size" placeholder="Size"/>
+            </fieldset>
+            <fieldset id={os.urandom(2)}>
+                <input name="name" placeholder="Name"/>
+                <input name="unit" placeholder="Unit"/>
+                <input name="size" placeholder="Size"/>
+            </fieldset>
+            <fieldset id={os.urandom(2)}>
+                <input name="name" placeholder="Name"/>
+                <input name="unit" placeholder="Unit"/>
+                <input name="size" placeholder="Size"/>
+            </fieldset>
+
+            <input type="hidden" name="userid" value={session["id"]}/>
+
+            <button type="submit">Add dish</button>
+        </form>
+
+        <a href={url_for("dishes")}>Go back to dishes list</a>
+    '''
+
+
+# Create a route to edit dishes
+@app.route("/profile/dishes/update", methods=["GET", "POST"])
+def update_dish():
+    # Check if session is valid
+    if "id" not in session:
+        return redirect(url_for("login"))
+    
+    if request.method == "POST":
+        if request.form["action"] == "edit":
             querydish, newdishname, *components, userid, action = request.form.items(multi=True)
+            # Create dish object to change
+            dish = dict()
+
+            dish["dish"] = querydish[1]
+
+            userid = int(userid[1].replace("/", ""))
+            dish["userid"] = userid
+
+            # Create object with dish updates
+            dish_edit = dict()
+
+            dish_edit["dish"] = newdishname[1]
+
+            dish_edit["components"] = []
+            for i in range(0, len(components), 3):
+                component = dict()
+
+            for k in range(i, i+3):
+                component[components[k][0]] = components[k][1]
+                
+                dish_edit["components"].append(component)
+            
+            if dish_exists(dish):
+                # Add dish updates to db
+                edit_dish(dish, dish_edit)
+
+                return redirect(url_for("dishes"))
+            
+            else:
+                return redirect(url_for("error", type="update_dish"))
+
+        if request.form["action"] == "delete":
             querydish, userid, action = request.form.items(multi=True)
+            # Create dish object to change
+            dish = dict()
+
+            dish["dish"] = querydish[1]
+
+            userid = int(userid[1].replace("/", ""))
+            dish["userid"] = userid
+            if dish_exists(dish):
+                # Delete dish data
+                delete_dish(dish)
+
+                return redirect(url_for("dishes"))
+            
+            else:
+                return redirect(url_for("error", type="update_dish"))
+
+    # Implement a form to edit
+    # Implement a button to delete a dish
+    # Go back to dishes list
+    # Is a temporary solution for front-end
+    return f'''
+        <form action="/profile/dishes/update" method="post">
+            <input name="querydish" placeholder="Dish to change"/>
+
+            <input name="newdishname" placeholder="New name"/>
+
+            Components:
+
+            <fieldset id={os.urandom(2)}>
+                <input name="name" placeholder="Name"/>
+                <input name="unit" placeholder="Unit"/>
+                <input name="size" placeholder="Size"/>
+            </fieldset>
+            <fieldset id={os.urandom(2)}>
+                <input name="name" placeholder="Name"/>
+                <input name="unit" placeholder="Unit"/>
+                <input name="size" placeholder="Size"/>
+            </fieldset>
+            <fieldset id={os.urandom(2)}>
+                <input name="name" placeholder="Name"/>
+                <input name="unit" placeholder="Unit"/>
+                <input name="size" placeholder="Size"/>
+            </fieldset>
+
+            <input type="hidden" name="userid" value={session["id"]}/>
+            <input type="hidden" name="action" value="edit"/>
+            <button type="submit">Change dish</button>
+        </form>
+
+        <form action="/profile/dishes/update" method="post">
+            <input name="querydish" placeholder="Dish to delete"/>
+            <input type="hidden" name="userid" value={session["id"]}/>
+            <input type="hidden" name="action" value="delete"/>
+            <button type="submit">Delete dish</button>
+        </form>
+
+        <a href={url_for("dishes")}>Go back to dishes list</a>
+    '''
+
+
 # Display error
 @app.route("/error/<type>")
 def error(type):
