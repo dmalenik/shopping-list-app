@@ -5,8 +5,11 @@ from flask import Flask, request, redirect, url_for, session, Request
 from flask_session import Session
 from datetime import timedelta
 from dotenv import load_dotenv
+from werkzeug.datastructures import ImmutableOrderedMultiDict
 
 sys.path.append(os.path.abspath("/shopping-list-app/flaskr/db"))
+
+from users import register, edit_user_data, delete_user_data, get_user_data
 from helpers import login_credentials_valid, register_credentials_valid, dish_exists
 from dishes import get_dishes_list, add_dish, edit_dish, delete_dish
 
@@ -34,6 +37,7 @@ app.request_class = OrderedParamsContainer
 
 Session(app)
 
+
 # Use Ctrl+F to navigate through views
 
 # Modify requests
@@ -42,44 +46,7 @@ def func():
     session.modified = True
 
 
-# Display error
-@app.route("/error/<type>")
-def error(type):
-    # Is a temporary solution for front-end
-    return f'''
-        Invalid {type}! Try again!
-        Go to: <a href={url_for(type)}>{type}</a>
-    '''
-
-
-# Login
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    # Restart session every time a user logs in
-    session.clear()
-
-    if request.method == "POST":
-        credentials = {
-            "username": request.form["username"],
-            "password": request.form["password"]
-        }
-
-        if login_credentials_valid(credentials):
-            session["name"] = credentials["username"]
-
-            return redirect(url_for("profile"))
-        
-        else:
-            return redirect(url_for("error", type="login"))
-
-    # Is a temporary solution for front-end on GET method
-    return '''
-        <form action="/login" method="post">
-            <input name="username" placeholder="Name"/>
-            <input type="password" name="password" placeholder="password"/>
-            <button type="submit">Log in</button>
-        </form>
-    '''
+# Implement routes related to users
 
 
 # Enter page of the app

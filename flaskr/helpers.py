@@ -12,6 +12,9 @@ db = f"dbname={environ["DATABASE"]} host={environ["DATABASE_HOST"]} user={enviro
 db_table = "testing_users"
 
 
+# Implement helper functions for user data handling
+
+
 def login_credentials_valid(credentials):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
