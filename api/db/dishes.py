@@ -34,7 +34,6 @@ def add_dish(dish):
 def edit_dish(dish, dish_edit):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
-            # Put edit_dish data into the DB
             dish_update = False
             if dish_edit["dish"]:
                 curs.execute(f"UPDATE {db_table} SET dish = %s WHERE dish = %s AND userid = %s;", (dish_edit["dish"], dish["dish"], dish["userid"]))
