@@ -58,6 +58,7 @@ def index():
         Welcome!
 
         <a href={url_for("register")}>Register here!</a>
+        <a href={url_for("login")}>Login here!</a>
     '''
 
 
@@ -239,7 +240,7 @@ def dishes():
 
         {dishes_list}
         <a href={url_for("dish_add")}>Add new dish</a>
-        <a href={url_for("update_dish")}>Update dish</a>
+        <a href={url_for("dish_update")}>Update dish</a>
         <a href={url_for("profile")}>Go back to profile</a>
     '''
 
