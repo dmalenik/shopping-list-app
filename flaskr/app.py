@@ -12,6 +12,7 @@ sys.path.append(os.path.abspath("/shopping-list-app/flaskr/db"))
 from users import register, edit_user_data, delete_user_data, get_user_data
 from helpers import login_credentials_valid, register_credentials_valid, dish_exists
 from dishes import get_dishes_list, add_dish, edit_dish, delete_dish
+from lists import get_shopping_lists
 
 
 app = Flask(__name__)
@@ -133,6 +134,8 @@ def profile():
 
         <a href={url_for("update_user")}>Change user's data</a>
         <a href={url_for("dishes")}>See dishes list</a>
+        <a href={url_for("shopping")}>See shopping lists</a>
+
         <a href="/logout">Logout</a>
     '''
 
@@ -385,6 +388,50 @@ def update_dish():
         </form>
 
         <a href={url_for("dishes")}>Go back to dishes list</a>
+    '''
+
+
+# Implement routes related to shopping lists
+
+
+# Get current shopping lists related to a user
+@app.route("/profile/shopping")
+def shopping():
+    # Check if session is valid
+    if "id" not in session:
+        return redirect(url_for("login"))
+
+    user = {
+        "userid": session["id"]
+    }
+    # Get shopping lists for current user
+    shopping_lists = get_shopping_lists(user)
+    # Is a temporary solution for front-end
+    return f'''
+        Shopping lists
+
+        {shopping_lists}
+
+        <a href={url_for("list_add")}>Create new shopping list</a>
+        <a href={url_for("update_list")}>Update shopping list</a>
+        <a href={url_for("profile")}>Go back to profile</a>
+    '''
+
+
+# Create new shopping list
+@app.route("/profile/shopping/create")
+def list_create():
+    return f'''
+        Create new shopping list
+    '''
+
+
+# Update existing shopping list
+# Delete existing shopping list 
+@app.route("/profile/shopping/update")
+def update_list():
+    return f'''
+        Update shopping list...or delete it
     '''
 
 

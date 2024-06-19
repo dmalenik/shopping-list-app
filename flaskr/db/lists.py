@@ -14,6 +14,16 @@ db = f"dbname={environ["DATABASE"]} host={environ["DATABASE_HOST"]} user={enviro
 db_table = "testing_lists"
 
 
+# Get dishes list
+def get_shopping_lists(user):
+    with psycopg2.connect(db) as conn:
+        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
+            curs.execute(f"SELECT * FROM {db_table} WHERE userid = %s;", (user["userid"],))
+            res = curs.fetchall()
+    
+    return res if res else "No lists"
+
+
 def create_list(list):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
