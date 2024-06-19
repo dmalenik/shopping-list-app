@@ -35,9 +35,10 @@ def register_credentials_valid(credentials):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
             curs.execute(f"SELECT username FROM {db_table} WHERE username = %s;", (credentials["username"],))
-            res = dict(curs.fetchone())
-            if not res and credentials["username"] and credentials["email"] and credentials["password"]:
-                return True
+            if not curs.fetchone():
+                
+                if credentials["username"] and credentials["email"] and credentials["password"]:
+                    return True
     
     return False
 
