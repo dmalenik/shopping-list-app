@@ -1,5 +1,5 @@
 {
     "python.analysis.extraPaths": [
-        "./flaskr/db"
+        "./api/db"
     ]
 }

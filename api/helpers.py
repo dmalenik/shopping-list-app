@@ -35,9 +35,10 @@ def register_credentials_valid(credentials):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
             curs.execute(f"SELECT username FROM {db_table} WHERE username = %s;", (credentials["username"],))
-            res = dict(curs.fetchone())
-            if not res and credentials["username"] and credentials["email"] and credentials["password"]:
-                return True
+            if not curs.fetchone():
+                
+                if credentials["username"] and credentials["email"] and credentials["password"]:
+                    return True
     
     return False
 
@@ -56,3 +57,15 @@ def dish_exists(dish):
     
     return False
 
+
+# Implement helper functions for shopping lists data handling
+
+def list_exists(list):
+    with psycopg2.connect(db) as conn:
+        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:    
+            curs.execute(f"SELECT name FROM testing_lists WHERE name = %s AND id = %s;", (list["name"], list["id"]))
+
+            if curs.fetchone():
+                return True
+    
+    return False

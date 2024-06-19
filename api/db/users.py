@@ -16,10 +16,8 @@ db_table = "testing_users"
 def register(user):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
-            curs.execute(f"SELECT * FROM {db_table} WHERE username = %s AND email = %s;", (user["username"], user["email"]))
-            if not curs.fetchone():
-                hash = generate_password_hash(user["hash"])
-                curs.execute(f"INSERT INTO {db_table} (username, email, hash) VALUES (%s, %s, %s);", (user["username"], user["email"], hash))
+            hash = generate_password_hash(user["password"])
+            curs.execute(f"INSERT INTO {db_table} (username, email, hash) VALUES (%s, %s, %s);", (user["username"], user["email"], hash))
 
 
 # Get logged in user's data
