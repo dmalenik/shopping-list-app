@@ -7,7 +7,7 @@ from datetime import timedelta
 from dotenv import load_dotenv
 from werkzeug.datastructures import ImmutableOrderedMultiDict
 
-sys.path.append(os.path.abspath("/shopping-list-app/api/db"))
+sys.path.append(os.path.abspath("./db"))
 
 from users import register, edit_user_data, delete_user_data, get_user_data
 from helpers import login_credentials_valid, register_credentials_valid, dish_exists, list_exists
@@ -19,6 +19,7 @@ app = Flask(__name__)
 
 
 # Server-side session settings
+
 # Responses are stored in a server storage
 app.config["SESSION_TYPE"] = "filesystem"
 # User remains logged in for 1 hour
