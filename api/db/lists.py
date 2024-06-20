@@ -40,6 +40,10 @@ def edit_list(list, list_edit):
                 curs.execute(f"UPDATE {db_table} SET name = %s WHERE name = %s AND id = %s;", (list_edit["name"], list["name"], list["id"]))
                 name_update = True
             
+            # Update list elements
+            # Add new element to list
+            # Edit existing element
+            # Delete existing element
             if list_edit["elements"]:
                 list_to_string_elements = [json.dumps(element) for element in list_edit["elements"]]
                 
