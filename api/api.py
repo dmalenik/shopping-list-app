@@ -10,7 +10,7 @@ from werkzeug.datastructures import ImmutableOrderedMultiDict
 sys.path.append(os.path.abspath("./db"))
 
 from users import register, edit_user_data, delete_user_data, get_user_data
-from helpers import login_credentials_valid, register_credentials_valid, dish_exists, list_exists
+from helpers import login_credentials_valid, register_credentials_valid, dish_exists, list_exists, update_credentials_valid
 from dishes import get_dishes_list, add_dish, edit_dish, delete_dish
 from lists import get_shopping_lists, create_list, edit_list, delete_list
 
@@ -31,7 +31,7 @@ app.config["SESSION_USE_SIGNER"] = True
 load_dotenv()
 app.secret_key = os.environ["SECRET_KEY"]
 
-# Change the order of grouped values which appear in request
+# Change the order of request data
 class OrderedParamsContainer(Request):
     parameter_storage_class = ImmutableOrderedMultiDict
 
@@ -184,11 +184,10 @@ def profile_update():
                 "password": request.form["password"],
             }
 
-            # Fix - check if data to edit is valid
-            # Update data in db
-            edit_user_data(query, edit_user)
+            if update_credentials_valid(edit_user):
+                edit_user_data(query, edit_user)
 
-            return redirect(url_for("logout"))
+                return redirect(url_for("logout"))
         
         # Delete user data
         if query["action"] == "delete":
@@ -196,7 +195,7 @@ def profile_update():
 
             return redirect(url_for("index"))
         
-        return redirect(url_for("error"), type="profile_update")
+        return redirect(url_for("error", type="profile_update"))
     
     # Is a temporary solution for front-end
     return f'''
@@ -254,10 +253,10 @@ def dish_add():
         return redirect(url_for("login"))
     
     if request.method == "POST":
-        # Create dish object
-        dish = dict()
-
+        # Create dish object to add
         dish_name, *components, userid = request.form.items(multi=True)
+
+        dish = dict()
 
         dish["dish"] = dish_name[1]
 
@@ -321,6 +320,7 @@ def dish_update():
         return redirect(url_for("login"))
     
     if request.method == "POST":
+
         if request.form["action"] == "edit":
             querydish, newdishname, *components, userid, action = request.form.items(multi=True)
             # Create dish object to change
@@ -360,6 +360,7 @@ def dish_update():
 
             userid = int(userid[1].replace("/", ""))
             dish["userid"] = userid
+
             if dish_exists(dish):
                 # Delete dish data
                 delete_dish(dish)
@@ -368,9 +369,6 @@ def dish_update():
             
         return redirect(url_for("error", type="dish_update"))
 
-    # Implement a form to edit
-    # Implement a button to delete a dish
-    # Go back to dishes list
     # Is a temporary solution for front-end
     return f'''
         <form action="/profile/dishes/update" method="post">
@@ -447,10 +445,9 @@ def list_create():
         return redirect(url_for("login"))
     
     if request.method == "POST":
+        list_name, *elements, userid = request.form.items(multi=True)
         # Create list object
         list = dict()
-
-        list_name, *elements, userid = request.form.items(multi=True)
 
         list["name"] = list_name[1]
 
@@ -501,8 +498,6 @@ def list_create():
     '''
 
 
-# Update existing shopping list
-# Delete existing shopping list 
 @app.route("/profile/lists/update", methods=["GET", "POST"])
 def list_update():
     # Check if session is valid
@@ -511,6 +506,7 @@ def list_update():
     
     if request.method == "POST":
 
+        # Update existing shopping list
         if request.form["action"] == "edit":
             querylist, queryid, newlistname, *elements, userid, action = request.form.items(multi=True)
             # Create list object to change
@@ -541,6 +537,7 @@ def list_update():
 
                 return redirect(url_for("lists"))
 
+        # Delete existing shopping list 
         if request.form["action"] == "delete":
             querylist, queryid, userid, action = request.form.items(multi=True)
             # Create list object to change
@@ -558,9 +555,6 @@ def list_update():
             
         return redirect(url_for("error", type="list_update"))
 
-    # Implement a form to edit
-    # Implement a button to delete a dish
-    # Go back to dishes list
     # Is a temporary solution for front-end
     return f'''
         <form action="/profile/lists/update" method="post">
