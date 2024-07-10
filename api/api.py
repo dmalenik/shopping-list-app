@@ -19,8 +19,6 @@ from lists import get_shopping_lists, create_list, edit_list, delete_list
 app = Flask(__name__)
 
 
-# Server-side session settings
-
 # Responses are stored in a server storage
 app.config["SESSION_TYPE"] = "filesystem"
 # User remains logged in for 1 hour
@@ -115,6 +113,7 @@ def profile():
     return jsonify(user)
 
 
+# Update user data
 @app.route("/profile/update", methods=["GET", "POST"])
 def profile_update():
     # Check if session is valid
