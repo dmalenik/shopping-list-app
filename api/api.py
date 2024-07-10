@@ -101,25 +101,16 @@ def logout():
 
 
 # Display user profile
-@app.route("/profile")
+@app.route("/api/profile")
 def profile():
     # Check if session is valid
     if "id" not in session:
         return redirect(url_for("logout"))
-
-    # Is a temporary solution for front-end
-    return f'''
-        {session["name"]}'s profile
-
-        <a href={url_for("profile_update")}>Change user's data</a>
-        <a href={url_for("dishes")}>See dishes list</a>
-        <a href={url_for("lists")}>See shopping lists</a>
-
-        <a href={url_for("logout")}>Logout</a>
-    '''
+    
+    user = get_user_data(dict(username=session['name']))    
+    return jsonify(user)
 
 
-# Change user data
 @app.route("/profile/update", methods=["GET", "POST"])
 def profile_update():
     # Check if session is valid
