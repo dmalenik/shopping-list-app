@@ -90,21 +90,11 @@ def login():
 
 
 # Logout user
-@app.route("/logout")
+@app.route("/api/logout")
 def logout():
     session.clear()
     
-    return redirect(url_for("login"))
-
-
-# Display error
-@app.route("/error/<type>")
-def error(type):
-    # Is a temporary solution for front-end
-    return f'''
-        Invalid {type}! Try again!
-        Go to: <a href={url_for(type)}>{type}</a>
-    '''
+    return jsonify(success=True)
 
 
 # Implement routes related to user
