@@ -13,7 +13,7 @@ db_table = "testing_users"
 
 
 # Register a new user
-def register(user):
+def register_user(user):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
             hash = generate_password_hash(user["password"])
@@ -24,7 +24,7 @@ def register(user):
 def get_user_data(credentials):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
-            curs.execute(f"SELECT id, username FROM {db_table} WHERE username = %s;", (credentials["username"],))
+            curs.execute(f"SELECT id, username, email FROM {db_table} WHERE username = %s;", (credentials["username"],))
 
             res = curs.fetchone()
             if res:

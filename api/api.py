@@ -1,7 +1,8 @@
 import os
 import sys
 
-from flask import Flask, request, redirect, url_for, session, Request
+from flask import Flask, request, redirect, url_for, session, Request, jsonify
+from flask_cors import CORS
 from flask_session import Session
 from datetime import timedelta
 from dotenv import load_dotenv
@@ -9,7 +10,7 @@ from werkzeug.datastructures import ImmutableOrderedMultiDict
 
 sys.path.append(os.path.abspath("./db"))
 
-from users import register, edit_user_data, delete_user_data, get_user_data
+from users import register_user, edit_user_data, delete_user_data, get_user_data
 from helpers import login_credentials_valid, register_credentials_valid, dish_exists, list_exists, update_credentials_valid
 from dishes import get_dishes_list, add_dish, edit_dish, delete_dish
 from lists import get_shopping_lists, create_list, edit_list, delete_list
@@ -18,16 +19,15 @@ from lists import get_shopping_lists, create_list, edit_list, delete_list
 app = Flask(__name__)
 
 
-# Server-side session settings
-
 # Responses are stored in a server storage
 app.config["SESSION_TYPE"] = "filesystem"
 # User remains logged in for 1 hour
-app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(hours=1)
+# app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(hours=1)
+app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=1)
 # Use it to cryptographically-sign cookies
 app.config["SESSION_USE_SIGNER"] = True
 
-# Secret key was configured
+# Secret key configurations
 load_dotenv()
 app.secret_key = os.environ["SECRET_KEY"]
 
@@ -39,6 +39,8 @@ app.request_class = OrderedParamsContainer
 
 Session(app)
 
+# Enable CORS
+cors = CORS(app, origins=["http://127.0.0.1:3000"], resources=[r"/api/*"], supports_credentials=True)
 
 # Use Ctrl+F to navigate through views
 
@@ -48,121 +50,70 @@ def func():
     session.modified = True
 
 
-# Implement routes related to user authentication
-
-
-# Enter page of the app
 @app.route("/")
 def index():
-    # Is a temporary solution for front-end on GET method
-    return f'''
-        Welcome!
-
-        <a href={url_for("register")}>Register here!</a>
-        <a href={url_for("login")}>Login here!</a>
-    '''
+    # render build frontend static files here
+    return jsonify(success=True)
 
 
-@app.route("/register", methods=["GET", "POST"])
+# Implement routes related to user authentication
+
+# Register
+@app.route("/api/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        credentials = {
-            "username": request.form["username"],
-            "email": request.form["email"],
-            "password": request.form["password"]
-        }
+        credentials = dict(request.form)
 
         if register_credentials_valid(credentials):
-            register(credentials)
+            register_user(credentials)
+            return jsonify(success=True)
 
-            return redirect(url_for("login"))
+    return jsonify(success=False)
 
-        return redirect(url_for("error", type="register"))
-
-    # Is a temporary solution for front-end on GET method
-    return f'''
-        <form action="/register" method="post">
-            <input name="username" placeholder="Name"/>
-            <input name="email" placeholder="Email"/>
-            <input type="password" name="password" placeholder="password"/>
-            <button type="submit">Submit</button>
-        </form>
-    '''
 
 # Login
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/api/login", methods=["GET", "POST"])
 def login():
     # Restart session every time a user logs in
     session.clear()
 
     if request.method == "POST":
-        credentials = {
-            "username": request.form["username"],
-            "password": request.form["password"]
-        }
+        credentials = dict(request.form)
 
         if login_credentials_valid(credentials):
-            # Get logged in user data
             user = get_user_data(credentials)
-            # Assign to session data user's name and id
+
             session["id"] = user["id"]
             session["name"] = user["username"]
 
-            return redirect(url_for("profile"))
+            return jsonify(success=True)
         
-        return redirect(url_for("error", type="login"))
-
-    # Is a temporary solution for front-end on GET method
-    return '''
-        <form action="/login" method="post">
-            <input name="username" placeholder="Name"/>
-            <input type="password" name="password" placeholder="password"/>
-            <button type="submit">Log in</button>
-        </form>
-    '''
+    return jsonify(success=False)
 
 
 # Logout user
-@app.route("/logout")
+@app.route("/api/logout")
 def logout():
     session.clear()
     
-    return redirect(url_for("login"))
-
-
-# Display error
-@app.route("/error/<type>")
-def error(type):
-    # Is a temporary solution for front-end
-    return f'''
-        Invalid {type}! Try again!
-        Go to: <a href={url_for(type)}>{type}</a>
-    '''
+    return jsonify(success=True)
 
 
 # Implement routes related to user
 
 
 # Display user profile
-@app.route("/profile")
+@app.route("/api/profile")
 def profile():
     # Check if session is valid
     if "id" not in session:
         return redirect(url_for("logout"))
-
-    # Is a temporary solution for front-end
-    return f'''
-        {session["name"]}'s profile
-
-        <a href={url_for("profile_update")}>Change user's data</a>
-        <a href={url_for("dishes")}>See dishes list</a>
-        <a href={url_for("lists")}>See shopping lists</a>
-
-        <a href={url_for("logout")}>Logout</a>
-    '''
+    
+    user = get_user_data(dict(username=session['name']))    
+    return jsonify(user)
 
 
-# Change user data
+# Update user data
 @app.route("/profile/update", methods=["GET", "POST"])
 def profile_update():
     # Check if session is valid
