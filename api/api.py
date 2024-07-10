@@ -27,7 +27,7 @@ app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(hours=1)
 # Use it to cryptographically-sign cookies
 app.config["SESSION_USE_SIGNER"] = True
 
-# Secret key was configured
+# Secret key configurations
 load_dotenv()
 app.secret_key = os.environ["SECRET_KEY"]
 
@@ -56,6 +56,8 @@ def func():
 # Enter page of the app
 @app.route("/")
 def index():
+# Implement routes related to user authentication
+
 # Register
 @app.route("/api/register", methods=["GET", "POST"])
 def register():
