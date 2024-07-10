@@ -70,36 +70,23 @@ def register():
 
 
 # Login
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/api/login", methods=["GET", "POST"])
 def login():
     # Restart session every time a user logs in
     session.clear()
 
     if request.method == "POST":
-        credentials = {
-            "username": request.form["username"],
-            "password": request.form["password"]
-        }
+        credentials = dict(request.form)
 
         if login_credentials_valid(credentials):
-            # Get logged in user data
             user = get_user_data(credentials)
-            # Assign to session data user's name and id
+
             session["id"] = user["id"]
             session["name"] = user["username"]
 
-            return redirect(url_for("profile"))
+            return jsonify(success=True)
         
-        return redirect(url_for("error", type="login"))
-
-    # Is a temporary solution for front-end on GET method
-    return '''
-        <form action="/login" method="post">
-            <input name="username" placeholder="Name"/>
-            <input type="password" name="password" placeholder="password"/>
-            <button type="submit">Log in</button>
-        </form>
-    '''
+    return jsonify(success=False)
 
 
 # Logout user
