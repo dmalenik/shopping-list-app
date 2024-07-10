@@ -56,40 +56,18 @@ def func():
 # Enter page of the app
 @app.route("/")
 def index():
-    # Is a temporary solution for front-end on GET method
-    return f'''
-        Welcome!
-
-        <a href={url_for("register")}>Register here!</a>
-        <a href={url_for("login")}>Login here!</a>
-    '''
-
-
-@app.route("/register", methods=["GET", "POST"])
+# Register
+@app.route("/api/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        credentials = {
-            "username": request.form["username"],
-            "email": request.form["email"],
-            "password": request.form["password"]
-        }
+        credentials = dict(request.form)
 
         if register_credentials_valid(credentials):
-            register(credentials)
+            register_user(credentials)
+            return jsonify(success=True)
 
-            return redirect(url_for("login"))
+    return jsonify(success=False)
 
-        return redirect(url_for("error", type="register"))
-
-    # Is a temporary solution for front-end on GET method
-    return f'''
-        <form action="/register" method="post">
-            <input name="username" placeholder="Name"/>
-            <input name="email" placeholder="Email"/>
-            <input type="password" name="password" placeholder="password"/>
-            <button type="submit">Submit</button>
-        </form>
-    '''
 
 # Login
 @app.route("/login", methods=["GET", "POST"])
