@@ -50,12 +50,12 @@ def func():
     session.modified = True
 
 
-# Implement routes related to user authentication
-
-
-# Enter page of the app
 @app.route("/")
 def index():
+    # render build frontend static files here
+    return jsonify(success=True)
+
+
 # Implement routes related to user authentication
 
 # Register
