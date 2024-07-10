@@ -3,14 +3,44 @@ import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
 import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 
-import App, {appLoader, appAction} from './App';
+import {App} from './routes/app';
+import {Register, registerAction} from './routes/register';
+import {Login, LoginError, loginAction} from './routes/login';
+import {RequireAuth} from './routes/require-auth';
+import {UserProfile, userProfileLoader} from './routes/profile';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
-    loader: appLoader,
-    action: appAction,
+    children: [
+      {
+        path: 'home',
+        element: <div>Home is where you are!</div>,
+        index: true,
+      },
+      {
+        path: 'register',
+        element: <Register />,
+        action: registerAction,
+      },
+      {
+        path: 'login',
+        element: <Login />,
+        errorElement: <LoginError />,
+        action: loginAction,
+      },
+      {
+        element: <RequireAuth />,
+        children: [
+          {
+            path: 'profile',
+            element: <UserProfile />,
+            loader: userProfileLoader,
+          },
+        ],
+      },
+    ],
   },
 ]);
 
