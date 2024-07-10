@@ -24,7 +24,8 @@ app = Flask(__name__)
 # Responses are stored in a server storage
 app.config["SESSION_TYPE"] = "filesystem"
 # User remains logged in for 1 hour
-app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(hours=1)
+# app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(hours=1)
+app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=1)
 # Use it to cryptographically-sign cookies
 app.config["SESSION_USE_SIGNER"] = True
 
