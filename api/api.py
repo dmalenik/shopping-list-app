@@ -1,7 +1,7 @@
 import os
 import sys
 
-from flask import Flask, request, redirect, url_for, session, Request
+from flask_cors import CORS
 from flask_session import Session
 from datetime import timedelta
 from dotenv import load_dotenv
@@ -39,6 +39,8 @@ app.request_class = OrderedParamsContainer
 
 Session(app)
 
+# Enable CORS
+cors = CORS(app, origins=["http://127.0.0.1:3000"], resources=[r"/api/*"], supports_credentials=True)
 
 # Use Ctrl+F to navigate through views
 
