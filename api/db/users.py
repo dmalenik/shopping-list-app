@@ -13,7 +13,7 @@ db_table = "testing_users"
 
 
 # Register a new user
-def register(user):
+def register_user(user):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
             hash = generate_password_hash(user["password"])

@@ -10,7 +10,7 @@ from werkzeug.datastructures import ImmutableOrderedMultiDict
 
 sys.path.append(os.path.abspath("./db"))
 
-from users import register, edit_user_data, delete_user_data, get_user_data
+from users import register_user, edit_user_data, delete_user_data, get_user_data
 from helpers import login_credentials_valid, register_credentials_valid, dish_exists, list_exists, update_credentials_valid
 from dishes import get_dishes_list, add_dish, edit_dish, delete_dish
 from lists import get_shopping_lists, create_list, edit_list, delete_list
