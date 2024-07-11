@@ -36,9 +36,6 @@ def get_user_session_data(credentials):
 def get_user_data(credentials):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
-            # Provide login data
-            # Find user id
-            print("credentials id", credentials["id"])
             curs.execute(f"SELECT id, username, email FROM {db_table} WHERE id = %s;", (credentials["id"],))
 
             res = curs.fetchone()

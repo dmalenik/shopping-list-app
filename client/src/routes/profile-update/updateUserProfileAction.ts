@@ -15,7 +15,7 @@ const postUpdateUserData = async (formData: FormData) => {
     });
     const {success}: any = await response.json();
 
-    return success ? redirect('/profile') : null;
+    return success && redirect('/profile');
   } catch (error) {
     return error;
   }

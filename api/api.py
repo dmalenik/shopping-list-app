@@ -124,21 +124,15 @@ def profile_update():
 
     if request.method == "POST":
         # Dmytro Malienik, not Dmytro
-        query = {
-            "id": session["id"],
-            "action": request.form["action"]
-        }
+        query = dict(id=session["id"], action=request.form["action"])
 
         # # Update user data
         if query["action"] == "edit":
-            edit_user = {
-                "username": request.form["username"],
-                "email": request.form["email"], 
-                "password": request.form["password"],
-            }
+            edit_user = dict(request.form)
 
             if update_credentials_valid(edit_user):
                 edit_user_data(query, edit_user)
+                return jsonify(success=True)
         
         # # Delete user data
         if query["action"] == "delete":
