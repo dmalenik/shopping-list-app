@@ -141,24 +141,9 @@ def profile_update():
                 edit_user_data(query, edit_user)
         
         # # Delete user data
-        # if query["action"] == "delete":
-        #     delete_user_data(query)
-
-        #     return redirect(url_for("index"))
-        
-        # return redirect(url_for("error", type="profile_update"))
-        return jsonify(success=True)
-    
-    # Is a temporary solution for front-end
-    return f'''
-        {session["name"]}, delete your data here!
-
-        <form action="/profile/update" method="post">
-            <input type="hidden" name="queryname" value={session["name"]}/>
-            <input type="hidden" name="action" value="delete"/>
-            <button type="submit">Delete profile</button>
-        </form>
-    '''
+        if query["action"] == "delete":
+            delete_user_data(query)
+            return redirect(url_for("logout"))
 
 
 # Implement routes related to dishes

@@ -79,6 +79,6 @@ def edit_user_data(user, edit_user):
 def delete_user_data(user):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
-            curs.execute(f"DELETE FROM {db_table} WHERE username = %s;", (user["username"],))
-        
+            curs.execute(f"DELETE FROM {db_table} WHERE id = %s;", (user["id"],))
+
 
