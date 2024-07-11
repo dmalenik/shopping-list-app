@@ -14,8 +14,6 @@ export const UserProfile = () => {
     if (sessionData.success) {
       setValue(false);
       navigate('/login');
-    } else {
-      console.log(sessionData);
     }
   }, [sessionData]);
 
