@@ -81,6 +81,10 @@ def login():
         credentials = dict(request.form)
 
         if login_credentials_valid(credentials):
+            # Set session for available user
+            # The data is get by username
+            # Provide login data
+            # Find user id
             user = get_user_data(credentials)
 
             session["id"] = user["id"]
@@ -109,57 +113,51 @@ def profile():
     if "id" not in session:
         return redirect(url_for("logout"))
     
-    user = get_user_data(dict(username=session['name']))    
+    # Session name cannot be found because username was changed
+    # Find user by id
+    # Return the whole user data
+    print(session['name'])
+    user = get_user_data(dict(username=session['name']))
     return jsonify(user)
 
 
 # Update user data
-@app.route("/profile/update", methods=["GET", "POST"])
+@app.route("/api/profile/update", methods=["GET", "POST"])
 def profile_update():
     # Check if session is valid
     if "id" not in session:
         return redirect(url_for("logout"))
 
     if request.method == "POST":
+        print(request.form)
         # Dmytro Malienik, not Dmytro
         query = {
             "username": session["name"],
             "action": request.form["action"]
         }
 
-        # Update user data
+        # # Update user data
         if query["action"] == "edit":
             edit_user = {
                 "username": request.form["username"],
-                "email": request.form["email"],
+                "email": request.form["email"], 
                 "password": request.form["password"],
             }
 
             if update_credentials_valid(edit_user):
                 edit_user_data(query, edit_user)
-
-                return redirect(url_for("logout"))
         
-        # Delete user data
-        if query["action"] == "delete":
-            delete_user_data(query)
+        # # Delete user data
+        # if query["action"] == "delete":
+        #     delete_user_data(query)
 
-            return redirect(url_for("index"))
+        #     return redirect(url_for("index"))
         
-        return redirect(url_for("error", type="profile_update"))
+        # return redirect(url_for("error", type="profile_update"))
+        return jsonify(success=True)
     
     # Is a temporary solution for front-end
     return f'''
-        {session["name"]}, change you data here!
-
-        <form action="/profile/update" method="post">
-            <input name="username" placeholder="Name"/>
-            <input name="email" placeholder="Email"/>
-            <input type="password" name="password" placeholder="password"/>
-            <input type="hidden" name="action" value="edit"/>
-            <button type="submit">Change data</button>
-        </form>
-
         {session["name"]}, delete your data here!
 
         <form action="/profile/update" method="post">
