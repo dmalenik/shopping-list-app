@@ -8,6 +8,10 @@ import {Register, registerAction} from './routes/register';
 import {Login, LoginError, loginAction} from './routes/login';
 import {RequireAuth} from './routes/require-auth';
 import {UserProfile, userProfileLoader} from './routes/profile';
+import {
+  UpdateUserProfile,
+  updateUserProfileAction,
+} from './routes/profile-update';
 
 const router = createBrowserRouter([
   {
@@ -37,6 +41,13 @@ const router = createBrowserRouter([
             path: 'profile',
             element: <UserProfile />,
             loader: userProfileLoader,
+            children: [
+              {
+                path: 'update',
+                element: <UpdateUserProfile />,
+                action: updateUserProfileAction,
+              },
+            ],
           },
         ],
       },
