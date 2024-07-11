@@ -10,7 +10,7 @@ from werkzeug.datastructures import ImmutableOrderedMultiDict
 
 sys.path.append(os.path.abspath("./db"))
 
-from users import register_user, edit_user_data, delete_user_data, get_user_data
+from users import register_user, edit_user_data, delete_user_data, get_user_data, get_user_session_data
 from helpers import login_credentials_valid, register_credentials_valid, dish_exists, list_exists, update_credentials_valid
 from dishes import get_dishes_list, add_dish, edit_dish, delete_dish
 from lists import get_shopping_lists, create_list, edit_list, delete_list
@@ -82,13 +82,9 @@ def login():
 
         if login_credentials_valid(credentials):
             # Set session for available user
-            # The data is get by username
-            # Provide login data
-            # Find user id
-            user = get_user_data(credentials)
+            user = get_user_session_data(credentials)
 
             session["id"] = user["id"]
-            session["name"] = user["username"]
 
             return jsonify(success=True)
         
@@ -114,10 +110,8 @@ def profile():
         return redirect(url_for("logout"))
     
     # Session name cannot be found because username was changed
-    # Find user by id
-    # Return the whole user data
-    print(session['name'])
-    user = get_user_data(dict(username=session['name']))
+    credentials = dict(id=session["id"])
+    user = get_user_data(credentials)
     return jsonify(user)
 
 
@@ -129,10 +123,9 @@ def profile_update():
         return redirect(url_for("logout"))
 
     if request.method == "POST":
-        print(request.form)
         # Dmytro Malienik, not Dmytro
         query = {
-            "username": session["name"],
+            "id": session["id"],
             "action": request.form["action"]
         }
 

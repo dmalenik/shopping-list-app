@@ -1,9 +1,7 @@
 import React from 'react';
-import {Form, useActionData} from 'react-router-dom';
+import {Form} from 'react-router-dom';
 
 export const UpdateUserProfile = () => {
-  const actionData = useActionData();
-  console.log('actionData', actionData);
   return (
     <Form method="post">
       <input name="username" placeholder="Name" />

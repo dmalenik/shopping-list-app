@@ -7,7 +7,6 @@ export const UserProfile = () => {
   // redirect works with loaders and actions
   const [storedValue, setValue] = useLoginState();
   const sessionData: unknown = useLoaderData();
-  console.error('component', sessionData);
   const navigate = useNavigate();
 
   // logout when session timeout
@@ -16,7 +15,7 @@ export const UserProfile = () => {
       setValue(false);
       navigate('/login');
     } else {
-      console.error('useEffect', sessionData);
+      console.log(sessionData);
     }
   }, [sessionData]);
 
@@ -36,13 +35,11 @@ export const UserProfile = () => {
 
   return (
     <div>
-      {sessionData.id ? (
+      {sessionData.id && (
         <div>
           Hello, {sessionData.username}! Your id is {sessionData.id}, your email
           - {sessionData.email}
         </div>
-      ) : (
-        <div>Hello!</div>
       )}
       <button type="button" onClick={logoutUser}>
         Logout
