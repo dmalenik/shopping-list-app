@@ -39,6 +39,7 @@ def register_credentials_valid(credentials):
                 return True if credentials["username"] and credentials["email"] and credentials["password"] else False
 
 
+# Update function
 def update_credentials_valid(credentials):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
