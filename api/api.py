@@ -144,26 +144,16 @@ def profile_update():
 
 
 # Create a route to see dishes
-@app.route("/profile/dishes")
+@app.route("/api/profile/dishes")
 def dishes():
     # Check if session is valid
     if "id" not in session:
-        return redirect(url_for("login"))
+        return redirect(url_for("logout"))
 
-    user = {
-        "userid": session["id"]
-    }
     # Get dishes list for current user
+    user = dict(userid=session["id"])
     dishes_list = get_dishes_list(user)
-    # Is a temporary solution for front-end
-    return f'''
-        Dishes list
-
-        {dishes_list}
-        <a href={url_for("dish_add")}>Add new dish</a>
-        <a href={url_for("dish_update")}>Update dish</a>
-        <a href={url_for("profile")}>Go back to profile</a>
-    '''
+    return jsonify(dishes=dishes_list)
 
 
 # Create a route to add new dish

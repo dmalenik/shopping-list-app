@@ -18,7 +18,7 @@ def get_dishes_list(user):
             curs.execute(f"SELECT * FROM {db_table} WHERE userid = %s;", (user["userid"],))
             res = curs.fetchall()
     
-    return res if res else "No dishes"
+    return res if res else None
 
 
 # Add dish data to DB

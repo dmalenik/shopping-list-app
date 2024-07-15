@@ -43,6 +43,7 @@ export const UserProfile = () => {
         Logout
       </button>
       <Link to={'update'}>Update</Link>
+      <Link to={'dishes'}>Dishes</Link>
       <Outlet />
     </div>
   );

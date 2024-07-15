@@ -12,6 +12,7 @@ import {
   UpdateUserProfile,
   updateUserProfileAction,
 } from './routes/profile-update';
+import {Dishes, dishesLoader} from './routes/dishes';
 
 const router = createBrowserRouter([
   {
@@ -46,6 +47,11 @@ const router = createBrowserRouter([
                 path: 'update',
                 element: <UpdateUserProfile />,
                 action: updateUserProfileAction,
+              },
+              {
+                path: 'dishes',
+                element: <Dishes />,
+                loader: dishesLoader,
               },
             ],
           },
