@@ -187,101 +187,46 @@ def dish_add():
 
 
 # Create a route to edit dishes
-@app.route("/profile/dishes/update", methods=["GET", "POST"])
+@app.route("/api/profile/dishes/update", methods=["GET", "POST"])
 def dish_update():
     # Check if session is valid
     if "id" not in session:
-        return redirect(url_for("login"))
+        return redirect(url_for("logout"))
     
     if request.method == "POST":
 
         if request.form["action"] == "edit":
-            querydish, newdishname, *components, userid, action = request.form.items(multi=True)
+            querydish, newdishname, *components, action = request.form.items(multi=True)
             # Create dish object to change
-            dish = dict()
-
-            dish["dish"] = querydish[1]
-
-            userid = int(userid[1].replace("/", ""))
-            dish["userid"] = userid
+            dish = dict(dish=querydish[1], userid=session["id"])
 
             # Create object with dish updates
-            dish_edit = dict()
+            dish_edit = dict(dish=newdishname[1], list=list())
 
-            dish_edit["dish"] = newdishname[1]
-
-            dish_edit["components"] = []
             for i in range(0, len(components), 3):
                 component = dict()
 
                 for k in range(i, i+3):
                     component[components[k][0]] = components[k][1]
                 
-                dish_edit["components"].append(component)
+                dish_edit["list"].append(component)
             
+            # Add dish updates to db    
             if dish_exists(dish):
-                # Add dish updates to db
                 edit_dish(dish, dish_edit)
-
-                return redirect(url_for("dishes"))
+                return jsonify(success=True)
 
         if request.form["action"] == "delete":
-            querydish, userid, action = request.form.items(multi=True)
+            querydish, action = request.form.items(multi=True)
             # Create dish object to change
-            dish = dict()
+            dish = dict(dish=querydish[1], userid=session["id"])
 
-            dish["dish"] = querydish[1]
-
-            userid = int(userid[1].replace("/", ""))
-            dish["userid"] = userid
-
+            # Delete dish data
             if dish_exists(dish):
-                # Delete dish data
                 delete_dish(dish)
-
-                return redirect(url_for("dishes"))
+                return jsonify(success=True)
             
-        return redirect(url_for("error", type="dish_update"))
-
-    # Is a temporary solution for front-end
-    return f'''
-        <form action="/profile/dishes/update" method="post">
-            <input name="querydish" placeholder="Dish to change"/>
-
-            <input name="newdishname" placeholder="New name"/>
-
-            Components:
-
-            <fieldset id={os.urandom(2)}>
-                <input name="name" placeholder="Name"/>
-                <input name="unit" placeholder="Unit"/>
-                <input name="size" placeholder="Size"/>
-            </fieldset>
-            <fieldset id={os.urandom(2)}>
-                <input name="name" placeholder="Name"/>
-                <input name="unit" placeholder="Unit"/>
-                <input name="size" placeholder="Size"/>
-            </fieldset>
-            <fieldset id={os.urandom(2)}>
-                <input name="name" placeholder="Name"/>
-                <input name="unit" placeholder="Unit"/>
-                <input name="size" placeholder="Size"/>
-            </fieldset>
-
-            <input type="hidden" name="userid" value={session["id"]}/>
-            <input type="hidden" name="action" value="edit"/>
-            <button type="submit">Change dish</button>
-        </form>
-
-        <form action="/profile/dishes/update" method="post">
-            <input name="querydish" placeholder="Dish to delete"/>
-            <input type="hidden" name="userid" value={session["id"]}/>
-            <input type="hidden" name="action" value="delete"/>
-            <button type="submit">Delete dish</button>
-        </form>
-
-        <a href={url_for("dishes")}>Go back to dishes list</a>
-    '''
+        return jsonify(success=False)
 
 
 # Implement routes related to shopping lists

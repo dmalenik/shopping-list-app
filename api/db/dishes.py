@@ -43,9 +43,9 @@ def edit_dish(dish, dish_edit):
             # New component can be added
             # Current component can be updated
             # Current component can be deleted 
-            if dish_edit["components"]:
+            if dish_edit["list"]:
                 # Convert components key to JSON
-                list_to_json_components = [json.dumps(component) for component in dish_edit["components"]]
+                list_to_json_components = [json.dumps(component) for component in dish_edit["list"]]
 
                 if dish_update:
                     curs.execute(f"UPDATE {db_table} SET components = %s WHERE dish = %s AND userid = %s;", (list_to_json_components, dish_edit["dish"], dish["userid"]))
