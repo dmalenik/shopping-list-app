@@ -13,6 +13,7 @@ import {
   updateUserProfileAction,
 } from './routes/profile-update';
 import {Dishes, dishesLoader} from './routes/dishes';
+import {addDishAction, AddDish} from './routes/dishes-add';
 
 const router = createBrowserRouter([
   {
@@ -52,6 +53,13 @@ const router = createBrowserRouter([
                 path: 'dishes',
                 element: <Dishes />,
                 loader: dishesLoader,
+                children: [
+                  {
+                    path: 'add',
+                    element: <AddDish />,
+                    action: addDishAction,
+                  },
+                ],
               },
             ],
           },

@@ -157,21 +157,18 @@ def dishes():
 
 
 # Create a route to add new dish
-@app.route("/profile/dishes/add", methods=["GET", "POST"])
+@app.route("/api/profile/dishes/add", methods=["GET", "POST"])
 def dish_add():
     # Check if session is valid
     if "id" not in session:
-        return redirect(url_for("login"))
+        return redirect(url_for("logout"))
     
     if request.method == "POST":
         # Create dish object to add
-        dish_name, *components, userid = request.form.items(multi=True)
+        dish_name, *components = request.form.items(multi=True)
 
-        dish = dict()
+        dish = dict(dish=dish_name[1], components=list(), userid=session["id"])
 
-        dish["dish"] = dish_name[1]
-
-        dish["components"] = []
         for i in range(0, len(components), 3):
             component = dict()
 
@@ -180,47 +177,13 @@ def dish_add():
             
             dish["components"].append(component)
 
-        userid = int(userid[1].replace("/", ""))
-        dish["userid"] = userid
         # Check if dish with the same name exists
         if dish_exists(dish):
-            return redirect(url_for("error", type="dish_add"))
+            return jsonify(success=False)
         
-        else:
-            # Was error due to similar with dish_add function names
-            add_dish(dish)
-
-            return redirect(url_for("dishes"))
-    # Is a temporary solution for front-end
-    return f'''
-        <form action="/profile/dishes/add" method="post">
-            <input name="dish" placeholder="Dish"/>
-
-            Components:
-
-            <fieldset id={os.urandom(2)}>
-                <input name="name" placeholder="Name"/>
-                <input name="unit" placeholder="Unit"/>
-                <input name="size" placeholder="Size"/>
-            </fieldset>
-            <fieldset id={os.urandom(2)}>
-                <input name="name" placeholder="Name"/>
-                <input name="unit" placeholder="Unit"/>
-                <input name="size" placeholder="Size"/>
-            </fieldset>
-            <fieldset id={os.urandom(2)}>
-                <input name="name" placeholder="Name"/>
-                <input name="unit" placeholder="Unit"/>
-                <input name="size" placeholder="Size"/>
-            </fieldset>
-
-            <input type="hidden" name="userid" value={session["id"]}/>
-
-            <button type="submit">Add dish</button>
-        </form>
-
-        <a href={url_for("dishes")}>Go back to dishes list</a>
-    '''
+        # Was error due to similar with dish_add function names
+        add_dish(dish)
+        return jsonify(success=True)
 
 
 # Create a route to edit dishes
