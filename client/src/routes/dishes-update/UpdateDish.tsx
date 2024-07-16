@@ -17,11 +17,11 @@ export const UpdateDish = () => {
             <input name="name" placeholder="name" />
             <input name="unit" placeholder="unit" />
             <input name="size" placeholder="size" />
-            <button type="button" onClick={handleUpdateIngredient}>
-              Update another ingredient
-            </button>
           </fieldset>
         ))}
+        <button type="button" onClick={handleUpdateIngredient}>
+          Update another ingredient
+        </button>
         <input type="hidden" name="action" value="edit" />
         <button type="submit">Update dish</button>
       </Form>
