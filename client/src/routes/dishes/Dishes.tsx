@@ -6,8 +6,26 @@ export const Dishes = () => {
 
   return (
     <div>
-      {loaderData.dishes ? (
-        <div>{loaderData.dishes}</div>
+      {!loaderData.success ? (
+        loaderData.map(({id, dish, components}, i) => (
+          <div key={i}>
+            <div>{dish}</div>
+            {components.map((component, idx) => {
+              const obj = JSON.parse(component);
+              const {name, unit, size} = obj;
+
+              return (
+                <div key={idx}>
+                  <div>{name}</div>
+                  <div>{unit}</div>
+                  <div>{size}</div>
+                </div>
+              );
+            })}
+            <div>{id}</div>
+            <button type="button">Update</button>
+          </div>
+        ))
       ) : (
         <div>No dishes in the list</div>
       )}
