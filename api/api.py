@@ -153,7 +153,7 @@ def dishes():
     # Get dishes list for current user
     user = dict(userid=session["id"])
     dishes_list = get_dishes_list(user)
-    return jsonify(dishes=dishes_list)
+    return jsonify(dishes_list)
 
 
 # Create a route to add new dish
