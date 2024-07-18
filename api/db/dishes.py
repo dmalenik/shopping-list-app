@@ -33,7 +33,7 @@ def add_dish(dish):
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
             # Adapt objects
             list_to_json_components = [json.dumps(component) for component in dish["components"]]
-            curs.execute(f"INSERT INTO {db_table}(dish, components, userid) VALUES (%s, %s, %s);", (dish["dish"], list_to_json_components, dish["userid"]))
+            curs.execute(f"INSERT INTO {db_table}(dish, components, userid) VALUES (%s, %s, %s);", (dish["dish"], list_to_json_components, dish["user"]))
 
 
 # Update dish data

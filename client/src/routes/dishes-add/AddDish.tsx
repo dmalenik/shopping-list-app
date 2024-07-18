@@ -17,14 +17,14 @@ export const AddDish = () => {
             <input name="name" placeholder="name" />
             <input name="unit" placeholder="unit" />
             <input name="size" placeholder="size" />
-            <button type="button" onClick={handleAddNewIngredient}>
-              +
-            </button>
           </fieldset>
         ))}
+        <button type="button" onClick={handleAddNewIngredient}>
+          +
+        </button>
         <button type="submit">Add dish to list</button>
       </Form>
-      {!actionData && <div>This dish already exists in the list</div>}
+      {actionData?.success && <div>This dish already exists in the list</div>}
     </div>
   );
 };

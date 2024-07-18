@@ -167,7 +167,7 @@ def dish_add():
         # Create dish object to add
         dish_name, *components = request.form.items(multi=True)
 
-        dish = dict(dish=dish_name[1], components=list(), userid=session["id"])
+        dish = dict(dish=dish_name[1], components=list(), id=None, user=session["id"])
 
         for i in range(0, len(components), 3):
             component = dict()
