@@ -37,32 +37,25 @@ def add_dish(dish):
 
 
 # Update dish data
-def edit_dish(dish, dish_edit):
+def edit_dish(dish, dish_update):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
-            dish_update = False
-            if dish_edit["dish"]:
-                curs.execute(f"UPDATE {db_table} SET dish = %s WHERE dish = %s AND userid = %s;", (dish_edit["dish"], dish["dish"], dish["userid"]))
-                dish_update = True
+            if dish_update["name"]:
+                curs.execute(f"UPDATE {db_table} SET dish = %s WHERE id = %s AND userid = %s;", (dish_update["name"], dish["id"], dish["user"]))
 
             # Update components
-            # New component can be added
-            # Current component can be updated
-            # Current component can be deleted 
-            if dish_edit["list"]:
+                # New component can be added
+                # Current component can be updated
+                # Current component can be deleted 
+            if dish_update["list"]:
                 # Convert components key to JSON
-                list_to_json_components = [json.dumps(component) for component in dish_edit["list"]]
-
-                if dish_update:
-                    curs.execute(f"UPDATE {db_table} SET components = %s WHERE dish = %s AND userid = %s;", (list_to_json_components, dish_edit["dish"], dish["userid"]))
-                
-                else:
-                    curs.execute(f"UPDATE {db_table} SET components = %s WHERE dish = %s AND userid = %s;", (list_to_json_components, dish["dish"], dish["userid"]))
+                list_to_json_components = [json.dumps(component) for component in dish_update["list"]]
+                curs.execute(f"UPDATE {db_table} SET components = %s WHERE id = %s AND userid = %s;", (list_to_json_components, dish["id"], dish["user"]))
 
 
 def delete_dish(dish):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
-            curs.execute(f"DELETE FROM {db_table} WHERE dish = %s AND userid = %s;", (dish["dish"], dish["userid"]))
+            curs.execute(f"DELETE FROM {db_table} WHERE id = %s AND userid = %s;", (dish["id"], dish["user"]))
 
 

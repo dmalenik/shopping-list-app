@@ -196,12 +196,12 @@ def dish_update():
     if request.method == "POST":
 
         if request.form["action"] == "edit":
-            querydish, newdishname, *components, action = request.form.items(multi=True)
+            dishname, *components, id, action = request.form.items(multi=True)
             # Create dish object to change
-            dish = dict(dish=querydish[1], userid=session["id"])
+            dish = dict(id=id[1], user=session["id"])
 
             # Create object with dish updates
-            dish_edit = dict(dish=newdishname[1], list=list())
+            dish_update = dict(name=dishname[1], list=list())
 
             for i in range(0, len(components), 3):
                 component = dict()
@@ -209,17 +209,17 @@ def dish_update():
                 for k in range(i, i+3):
                     component[components[k][0]] = components[k][1]
                 
-                dish_edit["list"].append(component)
+                dish_update["list"].append(component)
             
             # Add dish updates to db    
             if dish_exists(dish):
-                edit_dish(dish, dish_edit)
+                edit_dish(dish, dish_update)
                 return jsonify(success=True)
 
         if request.form["action"] == "delete":
-            querydish, action = request.form.items(multi=True)
+            id, action = request.form.items(multi=True)
             # Create dish object to change
-            dish = dict(dish=querydish[1], userid=session["id"])
+            dish = dict(id=id[1], user=session["id"])
 
             # Delete dish data
             if dish_exists(dish):
