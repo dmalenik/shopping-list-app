@@ -1,12 +1,9 @@
 import os
 import sys
 
-from flask import Flask, request, redirect, url_for, session, Request, jsonify
+from flask import Flask, request, redirect, url_for, session, jsonify
 from flask_cors import CORS
 from flask_session import Session
-from datetime import timedelta
-from dotenv import load_dotenv
-from werkzeug.datastructures import ImmutableOrderedMultiDict
 
 sys.path.append(os.path.abspath("./db"))
 
@@ -17,30 +14,12 @@ from lists import get_shopping_lists, create_list, edit_list, delete_list
 
 
 app = Flask(__name__)
-
-
-# Responses are stored in a server storage
-app.config["SESSION_TYPE"] = "filesystem"
-# User remains logged in for 1 hour
-# app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(hours=1)
-app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=1)
-# Use it to cryptographically-sign cookies
-app.config["SESSION_USE_SIGNER"] = True
-
-# Secret key configurations
-load_dotenv()
-app.secret_key = os.environ["SECRET_KEY"]
-
-# Change the order of request data
-class OrderedParamsContainer(Request):
-    parameter_storage_class = ImmutableOrderedMultiDict
-
-app.request_class = OrderedParamsContainer
+app.config.from_pyfile('config.py')
 
 Session(app)
 
 # Enable CORS
-cors = CORS(app, origins=["http://127.0.0.1:3000"], resources=[r"/api/*"], supports_credentials=True)
+CORS(app, origins=["http://127.0.0.1:3000"], resources=[r"/api/*"], supports_credentials=True)
 
 # Use Ctrl+F to navigate through views
 
