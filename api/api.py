@@ -21,6 +21,7 @@ Session(app)
 # Enable CORS
 CORS(app, origins=["http://127.0.0.1:3000"], resources=[r"/api/*"], supports_credentials=True)
 
+
 # Use Ctrl+F to navigate through views
 
 # Modify requests
