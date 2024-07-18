@@ -22,8 +22,15 @@ def get_dishes_list(user):
     dishes = list()
 
     for dish in res:
+
+        components = list()
+        for component in dish["components"]:
+            components.append(json.loads(component))
+        
+        dish["components"] = components
+
         dishes.append(dict(dish))
-    
+
     return dishes if res else None
 
 
