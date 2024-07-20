@@ -22,8 +22,6 @@ Session(app)
 CORS(app, origins=["http://127.0.0.1:3000"], resources=[r"/api/*"], supports_credentials=True)
 
 
-# Use Ctrl+F to navigate through views
-
 # Modify requests
 @app.before_request
 def func():
@@ -37,7 +35,6 @@ def index():
 
 
 # Implement routes related to user authentication
-
 # Register
 @app.route("/api/register", methods=["GET", "POST"])
 def register():
@@ -80,8 +77,6 @@ def logout():
 
 
 # Implement routes related to user
-
-
 # Display user profile
 @app.route("/api/profile")
 def profile():
@@ -121,8 +116,6 @@ def profile_update():
 
 
 # Implement routes related to dishes
-
-
 # Create a route to see dishes
 @app.route("/api/profile/dishes")
 def dishes():
@@ -210,8 +203,6 @@ def dish_update():
 
 
 # Implement routes related to shopping lists
-
-
 # Get current shopping lists related to a user
 @app.route("/profile/lists")
 def lists():
