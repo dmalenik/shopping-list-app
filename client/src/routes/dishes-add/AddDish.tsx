@@ -5,8 +5,6 @@ export const AddDish = () => {
   const [count, setCount] = useState(1);
   const actionData = useActionData();
 
-  const handleAddNewIngredient = () => setCount(count + 1);
-
   return (
     <div>
       <Form method="post">
@@ -19,7 +17,7 @@ export const AddDish = () => {
             <input name="size" placeholder="size" />
           </fieldset>
         ))}
-        <button type="button" onClick={handleAddNewIngredient}>
+        <button type="button" onClick={() => setCount(count + 1)}>
           +
         </button>
         <button type="submit">Add dish to list</button>

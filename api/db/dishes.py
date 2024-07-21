@@ -22,7 +22,7 @@ def get_dishes_list(user):
     dishes = list()
 
     for dish in res:
-
+        
         components = list()
         for component in dish["components"]:
             components.append(json.loads(component))
