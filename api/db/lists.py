@@ -18,10 +18,15 @@ db_table = "testing_lists"
 def get_shopping_lists(user):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
-            curs.execute(f"SELECT * FROM {db_table} WHERE userid = %s;", (user["userid"],))
+            curs.execute(f"SELECT * FROM {db_table} WHERE userid = %s;", (user["id"],))
             res = curs.fetchall()
-    
-    return res if res else "No lists"
+
+            shopping_lists = list()
+
+            for lists in res:
+                shopping_lists.append(dict(lists))
+
+    return shopping_lists if res else None
 
 
 def create_list(list):

@@ -44,6 +44,7 @@ export const UserProfile = () => {
       </button>
       <Link to={'update'}>Update</Link>
       <Link to={'dishes'}>Dishes</Link>
+      <Link to={'lists'}>Lists</Link>
       <Outlet />
     </div>
   );

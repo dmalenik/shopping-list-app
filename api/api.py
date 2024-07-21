@@ -204,27 +204,17 @@ def dish_update():
 
 # Implement routes related to shopping lists
 # Get current shopping lists related to a user
-@app.route("/profile/lists")
+@app.route("/api/profile/lists")
 def lists():
     # Check if session is valid
     if "id" not in session:
-        return redirect(url_for("login"))
+        return redirect(url_for("logout"))
 
-    user = {
-        "userid": session["id"]
-    }
+    user = dict(id=session["id"])
     # Get shopping lists for current user
     shopping_lists = get_shopping_lists(user)
-    # Is a temporary solution for front-end
-    return f'''
-        Shopping lists
 
-        {shopping_lists}
-
-        <a href={url_for("list_create")}>Create new shopping list</a>
-        <a href={url_for("list_update")}>Update shopping list</a>
-        <a href={url_for("profile")}>Go back to profile</a>
-    '''
+    return jsonify(shopping_lists)
 
 
 # Create new shopping list
