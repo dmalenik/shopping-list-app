@@ -1,10 +1,7 @@
 import os
 
-from flask import Request
-
 from datetime import timedelta
 from dotenv import load_dotenv
-from werkzeug.datastructures import ImmutableOrderedMultiDict
 
 # Responses are stored in a server storage
 SESSION_TYPE = "filesystem"
@@ -18,8 +15,3 @@ SESSION_USE_SIGNER = True
 load_dotenv()
 SECRET_KEY = os.environ["SECRET_KEY"]
 
-# Change the order of request data
-class OrderedParamsContainer(Request):
-    parameter_storage_class = ImmutableOrderedMultiDict
-
-REQUEST_CLASS = OrderedParamsContainer

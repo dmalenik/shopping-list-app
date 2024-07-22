@@ -1,9 +1,11 @@
 import os
 import sys
 
-from flask import Flask, request, redirect, url_for, session, jsonify
+from flask import Flask, request, redirect, url_for, session, jsonify, Request
 from flask_cors import CORS
 from flask_session import Session
+
+from werkzeug.datastructures import ImmutableOrderedMultiDict
 
 sys.path.append(os.path.abspath("./db"))
 
@@ -15,6 +17,12 @@ from lists import get_shopping_lists, create_list, edit_list, delete_list
 
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
+
+# Change the order of request data
+class OrderedParamsContainer(Request):
+    parameter_storage_class = ImmutableOrderedMultiDict
+
+app.request_class = OrderedParamsContainer
 
 Session(app)
 
@@ -138,14 +146,14 @@ def dish_add():
     
     if request.method == "POST":
         # Create dish object to add
-        dish_name, *components = request.form.items(multi=True)
+        name, *components = request.form.items(multi=True)
 
-        dish = dict(dish=dish_name[1], components=list(), id=None, user=session["id"])
+        dish = dict(dish=name[1], components=list(), id=None, user=session["id"])
 
-        for i in range(0, len(components), 3):
+        for i in range(0, len(components), 4):
             component = dict()
 
-            for k in range(i, i+3):
+            for k in range(i, i+4):
                 component[components[k][0]] = components[k][1]
             
             dish["components"].append(component)
@@ -167,19 +175,18 @@ def dish_update():
         return redirect(url_for("logout"))
     
     if request.method == "POST":
-
         if request.form["action"] == "edit":
-            dishname, *components, id, action = request.form.items(multi=True)
+            dishname, *components, dishid, action = request.form.items(multi=True)
             # Create dish object to change
-            dish = dict(id=id[1], user=session["id"])
+            dish = dict(id=dishid[1], user=session["id"])
 
             # Create object with dish updates
             dish_update = dict(name=dishname[1], list=list())
 
-            for i in range(0, len(components), 3):
+            for i in range(0, len(components), 4):
                 component = dict()
 
-                for k in range(i, i+3):
+                for k in range(i, i+4):
                     component[components[k][0]] = components[k][1]
                 
                 dish_update["list"].append(component)
