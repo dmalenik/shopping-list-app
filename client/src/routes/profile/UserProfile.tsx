@@ -1,13 +1,13 @@
 import React, {useEffect} from 'react';
-import {useLoaderData, useNavigate} from 'react-router-dom';
+import {useLoaderData, useNavigate, Outlet, Link} from 'react-router-dom';
 
 import {useLoginState} from '../../hooks';
 
 export const UserProfile = () => {
   // redirect works with loaders and actions
-  const navigate = useNavigate();
   const [storedValue, setValue] = useLoginState();
   const sessionData: unknown = useLoaderData();
+  const navigate = useNavigate();
 
   // logout when session timeout
   useEffect(() => {
@@ -24,7 +24,7 @@ export const UserProfile = () => {
 
       if (success) {
         setValue(false);
-        navigate('/home');
+        navigate('/login');
       }
     } catch (error) {
       return error;
@@ -42,6 +42,10 @@ export const UserProfile = () => {
       <button type="button" onClick={logoutUser}>
         Logout
       </button>
+      <Link to={'update'}>Update</Link>
+      <Link to={'dishes'}>Dishes</Link>
+      <Link to={'lists'}>Lists</Link>
+      <Outlet />
     </div>
   );
 };

@@ -39,6 +39,7 @@ def register_credentials_valid(credentials):
                 return True if credentials["username"] and credentials["email"] and credentials["password"] else False
 
 
+# Update function
 def update_credentials_valid(credentials):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
@@ -51,8 +52,8 @@ def update_credentials_valid(credentials):
 # User have to provide current dish name to be changed
 def dish_exists(dish):
     with psycopg2.connect(db) as conn:
-        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:    
-            curs.execute(f"SELECT dish FROM testing_dishes WHERE dish = %s;", (dish["dish"],))
+        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:  
+            curs.execute(f"SELECT id FROM testing_dishes WHERE id = %s;", (dish["id"],))
 
             return True if curs.fetchone() else False
 
@@ -60,12 +61,9 @@ def dish_exists(dish):
 # Implement helper functions for shopping lists data handling
 
 
-def list_exists(list):
+def list_exists(query_list):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:    
-            curs.execute(f"SELECT name FROM testing_lists WHERE name = %s AND id = %s;", (list["name"], list["id"]))
-
-            if curs.fetchone():
-                return True
-    
-    return False
+            curs.execute(f"SELECT id FROM testing_lists WHERE id = %s;", (query_list["id"],))
+            
+            return True if curs.fetchone() else False

@@ -20,8 +20,7 @@ def register_user(user):
             curs.execute(f"INSERT INTO {db_table} (username, email, hash) VALUES (%s, %s, %s);", (user["username"], user["email"], hash))
 
 
-# Get logged in user's data
-def get_user_data(credentials):
+def get_user_session_data(credentials):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
             curs.execute(f"SELECT id, username, email FROM {db_table} WHERE username = %s;", (credentials["username"],))
@@ -33,13 +32,26 @@ def get_user_data(credentials):
     return res
 
 
+# Get logged in user's data
+def get_user_data(credentials):
+    with psycopg2.connect(db) as conn:
+        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
+            curs.execute(f"SELECT id, username, email FROM {db_table} WHERE id = %s;", (credentials["id"],))
+
+            res = curs.fetchone()
+            if res:
+                res = dict(res)
+
+    return res
+
+
 # Edit user credentials
 def edit_user_data(user, edit_user):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
             username_change = False
             if edit_user["username"]:
-                curs.execute(f"UPDATE {db_table} SET username = %s WHERE username = %s;", (edit_user["username"], user["username"]))
+                curs.execute(f"UPDATE {db_table} SET username = %s WHERE id = %s;", (edit_user["username"], user["id"]))
                 username_change = True
 
             if edit_user["email"]:
@@ -64,6 +76,6 @@ def edit_user_data(user, edit_user):
 def delete_user_data(user):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
-            curs.execute(f"DELETE FROM {db_table} WHERE username = %s;", (user["username"],))
-        
+            curs.execute(f"DELETE FROM {db_table} WHERE id = %s;", (user["id"],))
+
 
