@@ -247,106 +247,46 @@ def list_create():
         return jsonify(success=True)
 
 
-@app.route("/profile/lists/update", methods=["GET", "POST"])
+@app.route("/api/profile/lists/update", methods=["GET", "POST"])
 def list_update():
     # Check if session is valid
     if "id" not in session:
-        return redirect(url_for("login"))
+        return redirect(url_for("logout"))
     
     if request.method == "POST":
 
         # Update existing shopping list
         if request.form["action"] == "edit":
-            querylist, queryid, newlistname, *elements, userid, action = request.form.items(multi=True)
+            name, *elements, id, action = request.form.items(multi=True)
             # Create list object to change
-            list = dict()
-
-            list["name"] = querylist[1]
-
-            list["id"] = queryid[1]
+            query_list = dict(id=id[1])
 
             # Create object with list updates
-            list_edit = dict()
+            list_edit = dict(name=name[1], elements=list())
 
-            list_edit["name"] = newlistname[1]
-
-            list_edit["elements"] = []
-            for i in range(0, len(elements), 3):
+            for i in range(0, len(elements), 4):
                 element = dict()
 
-                for k in range(i, i+3):
+                for k in range(i, i+4):
                     element[elements[k][0]] = elements[k][1]
                 
                 list_edit["elements"].append(element)
             
-            if list_exists(list):
+            if list_exists(query_list):
                 # Add list updates to db
                 # Fix - update only certain columns in db
-                edit_list(list, list_edit)
-
-                return redirect(url_for("lists"))
+                edit_list(query_list, list_edit)
+                return jsonify(success=True)
 
         # Delete existing shopping list 
         if request.form["action"] == "delete":
-            querylist, queryid, userid, action = request.form.items(multi=True)
+            id, action = request.form.items(multi=True)
             # Create list object to change
-            list = dict()
+            query_list = dict(id=id[1])
 
-            list["name"] = querylist[1]
-
-            list["id"] = queryid[1]
-
-            if list_exists(list):
+            if list_exists(query_list):
                 # Delete list data
-                delete_list(list)
-
-                return redirect(url_for("lists"))
-            
-        return redirect(url_for("error", type="list_update"))
-
-    # Is a temporary solution for front-end
-    return f'''
-        <form action="/profile/lists/update" method="post">
-            <input name="querylist" placeholder="List to change"/>
-            <input name="queryid" placeholder="List id to change"/>
-
-            <input name="newlistname" placeholder="New name"/>
-
-            Elements:
-
-            <fieldset id={os.urandom(2)}>
-                <input name="name" placeholder="Name"/>
-                <input name="unit" placeholder="Unit"/>
-                <input name="size" placeholder="Size"/>
-            </fieldset>
-            <fieldset id={os.urandom(2)}>
-                <input name="name" placeholder="Name"/>
-                <input name="unit" placeholder="Unit"/>
-                <input name="size" placeholder="Size"/>
-            </fieldset>
-            <fieldset id={os.urandom(2)}>
-                <input name="name" placeholder="Name"/>
-                <input name="unit" placeholder="Unit"/>
-                <input name="size" placeholder="Size"/>
-            </fieldset>
-
-            <input type="hidden" name="userid" value={session["id"]}/>
-            <input type="hidden" name="action" value="edit"/>
-
-            <button type="submit">Change list</button>
-        </form>
-
-        <form action="/profile/lists/update" method="post">
-            <input name="querylist" placeholder="List to delete"/>
-            <input name="queryid" placeholder="List id to delete"/>
-
-            <input type="hidden" name="userid" value={session["id"]}/>
-            <input type="hidden" name="action" value="delete"/>
-
-            <button type="submit">Delete list</button>
-        </form>
-
-        <a href={url_for("lists")}>Go back to shopping lists</a>
-    '''
+                delete_list(query_list)
+                return jsonify(success=True)
 
 

@@ -17,6 +17,10 @@ import {addDishAction, AddDish} from './routes/dishes-add';
 import {UpdateDish, updateDishAction} from './routes/dishes-update';
 import {ShoppingLists, shoppingListsLoader} from './routes/lists';
 import {AddShoppingList, addShoppingListAction} from './routes/lists-add';
+import {
+  UpdateShoppingList,
+  updateShoppingListAction,
+} from './routes/lists-update';
 
 const router = createBrowserRouter([
   {
@@ -78,6 +82,11 @@ const router = createBrowserRouter([
                     path: 'add',
                     element: <AddShoppingList />,
                     action: addShoppingListAction,
+                  },
+                  {
+                    path: 'update',
+                    element: <UpdateShoppingList />,
+                    action: updateShoppingListAction,
                   },
                 ],
               },
