@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Link, Outlet, useLoaderData, useNavigate} from 'react-router-dom';
 
 export const Dishes = () => {
-  const loaderData: any = useLoaderData();
+  const dishes: any = useLoaderData();
   const [updates, setUpdates] = useState();
   const navigate = useNavigate();
 
@@ -13,42 +13,42 @@ export const Dishes = () => {
 
   return (
     <div>
-      {!loaderData || loaderData.success ? (
-        <div>No dishes in the list</div>
-      ) : (
-        loaderData.map(
-          (
-            obj: {
-              dish: string;
-              components: {name: string; unit: string; size: string}[];
+      {dishes && !dishes.success ? (
+        dishes.map(
+          ({
+            dish,
+            components,
+            id,
+          }: {
+            dish: string;
+            components: {
+              name: string;
+              unit: string;
+              size: string;
               id: string;
-            },
-            i: number
-          ) => {
-            const {dish, components, id} = obj;
-
-            return (
-              <div key={i}>
-                <div>{dish}</div>
-                {components.map((component, idx) => {
-                  const {name, unit, size} = component;
-
-                  return (
-                    <div key={idx}>
-                      <div>{name}</div>
-                      <div>{unit}</div>
-                      <div>{size}</div>
-                    </div>
-                  );
-                })}
-                <div>{id}</div>
-                <button type="button" onClick={() => handleUpdates(obj)}>
-                  Update
-                </button>
-              </div>
-            );
-          }
+            }[];
+            id: string;
+          }) => (
+            <div key={id}>
+              <div>{dish}</div>
+              {components.map(({name, unit, size, id}) => (
+                <div key={id}>
+                  <div>{name}</div>
+                  <div>{unit}</div>
+                  <div>{size}</div>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => handleUpdates({dish, components, id})}
+              >
+                Update
+              </button>
+            </div>
+          )
         )
+      ) : (
+        <div>No dishes in the list</div>
       )}
       <Link to={'add'}>Add new dish</Link>
       <Outlet context={[updates, setUpdates]} />

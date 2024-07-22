@@ -1,9 +1,8 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Form, useOutletContext} from 'react-router-dom';
 
 export const UpdateDish = () => {
   const [updates, setUpdates] = useOutletContext();
-  const [count, setCount] = useState(0);
 
   return (
     <div>
@@ -16,10 +15,10 @@ export const UpdateDish = () => {
         />
         Components:
         {updates?.components.map((c, i) => {
-          const {name, unit, size} = c;
+          const {name, unit, size, id} = c;
 
           return (
-            <fieldset key={i}>
+            <fieldset key={id}>
               <input
                 name="name"
                 placeholder="name"
@@ -62,20 +61,30 @@ export const UpdateDish = () => {
                   })
                 }
               />
+              <input type="hidden" name="id" defaultValue={id} />
             </fieldset>
           );
         })}
-        {[...Array(count)].map((e, i) => (
-          <fieldset key={i}>
-            <input name="name" placeholder="new name" />
-            <input name="unit" placeholder="new unit" />
-            <input name="size" placeholder="new size" />
-          </fieldset>
-        ))}
-        <button type="button" onClick={() => setCount(count + 1)}>
+        <button
+          type="button"
+          onClick={() =>
+            setUpdates({
+              ...updates,
+              components: [
+                ...updates.components,
+                {
+                  name: '',
+                  unit: '',
+                  size: '',
+                  id: crypto.randomUUID(),
+                },
+              ],
+            })
+          }
+        >
           Add another ingredient
         </button>
-        <input type="hidden" name="id" value={updates?.id} />
+        <input type="hidden" name="dishid" value={updates?.id} />
         <input type="hidden" name="action" value="edit" />
         <button type="submit">Update dish</button>
       </Form>
