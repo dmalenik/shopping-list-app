@@ -178,7 +178,7 @@ def dish_update():
         if request.form["action"] == "edit":
             dishname, *components, dishid, action = request.form.items(multi=True)
             # Create dish object to change
-            dish = dict(id=dishid[1], user=session["id"])
+            dish = dict(id=dishid[1])
 
             # Create object with dish updates
             dish_update = dict(name=dishname[1], list=list())

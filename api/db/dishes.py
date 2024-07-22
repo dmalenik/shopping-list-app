@@ -48,7 +48,7 @@ def edit_dish(dish, dish_update):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
             if dish_update["name"]:
-                curs.execute(f"UPDATE {db_table} SET dish = %s WHERE id = %s AND userid = %s;", (dish_update["name"], dish["id"], dish["user"]))
+                curs.execute(f"UPDATE {db_table} SET dish = %s WHERE id = %s;", (dish_update["name"], dish["id"]))
 
             # Update components
                 # New component can be added
@@ -57,7 +57,7 @@ def edit_dish(dish, dish_update):
             if dish_update["list"]:
                 # Convert components key to JSON
                 list_to_json_components = [json.dumps(component) for component in dish_update["list"]]
-                curs.execute(f"UPDATE {db_table} SET components = %s WHERE id = %s AND userid = %s;", (list_to_json_components, dish["id"], dish["user"]))
+                curs.execute(f"UPDATE {db_table} SET components = %s WHERE id = %s;", (list_to_json_components, dish["id"]))
 
 
 def delete_dish(dish):

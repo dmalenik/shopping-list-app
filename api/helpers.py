@@ -52,13 +52,8 @@ def update_credentials_valid(credentials):
 # User have to provide current dish name to be changed
 def dish_exists(dish):
     with psycopg2.connect(db) as conn:
-        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
-
-            if dish["id"]:    
-                curs.execute(f"SELECT id FROM testing_dishes WHERE id = %s;", (dish["id"],))
-            
-            elif dish["dish"]:
-                curs.execute(f"SELECT id FROM testing_dishes WHERE dish = %s;", (dish["dish"],))
+        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:  
+            curs.execute(f"SELECT id FROM testing_dishes WHERE id = %s;", (dish["id"],))
 
             return True if curs.fetchone() else False
 
