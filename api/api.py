@@ -288,5 +288,7 @@ def list_update():
                 # Delete list data
                 delete_list(query_list)
                 return jsonify(success=True)
+            
+        return jsonify(success=False)
 
 
