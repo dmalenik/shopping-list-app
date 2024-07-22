@@ -18,51 +18,66 @@ export const UpdateDish = () => {
           const {name, unit, size, id} = c;
 
           return (
-            <fieldset key={id}>
-              <input
-                name="name"
-                placeholder="name"
-                defaultValue={name}
-                onChange={Event =>
+            <div key={id}>
+              <fieldset>
+                <input
+                  name="name"
+                  placeholder="name"
+                  defaultValue={name}
+                  onChange={Event =>
+                    setUpdates({
+                      ...updates,
+                      components: updates.components.toSpliced(i, 1, {
+                        ...c,
+                        name: Event.target.value,
+                      }),
+                    })
+                  }
+                />
+                <input
+                  name="unit"
+                  placeholder="unit"
+                  defaultValue={unit}
+                  onChange={Event =>
+                    setUpdates({
+                      ...updates,
+                      components: updates.components.toSpliced(i, 1, {
+                        ...c,
+                        unit: Event.target.value,
+                      }),
+                    })
+                  }
+                />
+                <input
+                  name="size"
+                  placeholder="size"
+                  defaultValue={size}
+                  onChange={Event =>
+                    setUpdates({
+                      ...updates,
+                      components: updates.components.toSpliced(i, 1, {
+                        ...c,
+                        size: Event.target.value,
+                      }),
+                    })
+                  }
+                />
+                <input type="hidden" name="id" defaultValue={id} />
+              </fieldset>
+              <button
+                type="button"
+                onClick={() =>
                   setUpdates({
                     ...updates,
-                    components: updates.components.toSpliced(i, 1, {
-                      ...c,
-                      name: Event.target.value,
-                    }),
+                    components: updates.components.filter(
+                      (c: unknown) => c.id !== id
+                    ),
                   })
                 }
-              />
-              <input
-                name="unit"
-                placeholder="unit"
-                defaultValue={unit}
-                onChange={Event =>
-                  setUpdates({
-                    ...updates,
-                    components: updates.components.toSpliced(i, 1, {
-                      ...c,
-                      unit: Event.target.value,
-                    }),
-                  })
-                }
-              />
-              <input
-                name="size"
-                placeholder="size"
-                defaultValue={size}
-                onChange={Event =>
-                  setUpdates({
-                    ...updates,
-                    components: updates.components.toSpliced(i, 1, {
-                      ...c,
-                      size: Event.target.value,
-                    }),
-                  })
-                }
-              />
-              <input type="hidden" name="id" defaultValue={id} />
-            </fieldset>
+              >
+                -
+              </button>
+            </div>
           );
         })}
         <button

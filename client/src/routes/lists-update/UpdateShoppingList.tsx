@@ -18,51 +18,66 @@ export const UpdateShoppingList = () => {
           const {id, item, measure, unit} = e;
 
           return (
-            <fieldset key={id}>
-              <input
-                name="item"
-                placeholder="name"
-                defaultValue={item}
-                onChange={Event =>
+            <div key={id}>
+              <fieldset>
+                <input
+                  name="item"
+                  placeholder="name"
+                  defaultValue={item}
+                  onChange={Event =>
+                    setUpdates({
+                      ...updates,
+                      elements: updates.elements.toSpliced(i, 1, {
+                        ...e,
+                        item: Event.target.value,
+                      }),
+                    })
+                  }
+                />
+                <input
+                  name="measure"
+                  placeholder="measure"
+                  defaultValue={measure}
+                  onChange={Event =>
+                    setUpdates({
+                      ...updates,
+                      elements: updates.elements.toSpliced(i, 1, {
+                        ...e,
+                        measure: Event.target.value,
+                      }),
+                    })
+                  }
+                />
+                <input
+                  name="unit"
+                  placeholder="unit"
+                  defaultValue={unit}
+                  onChange={Event =>
+                    setUpdates({
+                      ...updates,
+                      elements: updates.elements.toSpliced(i, 1, {
+                        ...e,
+                        unit: Event.target.value,
+                      }),
+                    })
+                  }
+                />
+                <input type="hidden" name="id" defaultValue={id} />
+              </fieldset>
+              <button
+                type="button"
+                onClick={() =>
                   setUpdates({
                     ...updates,
-                    elements: updates.elements.toSpliced(i, 1, {
-                      ...e,
-                      item: Event.target.value,
-                    }),
+                    elements: updates.elements.filter(
+                      (e: unknown) => e.id !== id
+                    ),
                   })
                 }
-              />
-              <input
-                name="measure"
-                placeholder="measure"
-                defaultValue={measure}
-                onChange={Event =>
-                  setUpdates({
-                    ...updates,
-                    elements: updates.elements.toSpliced(i, 1, {
-                      ...e,
-                      measure: Event.target.value,
-                    }),
-                  })
-                }
-              />
-              <input
-                name="unit"
-                placeholder="unit"
-                defaultValue={unit}
-                onChange={Event =>
-                  setUpdates({
-                    ...updates,
-                    elements: updates.elements.toSpliced(i, 1, {
-                      ...e,
-                      unit: Event.target.value,
-                    }),
-                  })
-                }
-              />
-              <input type="hidden" name="id" defaultValue={id} />
-            </fieldset>
+              >
+                -
+              </button>
+            </div>
           );
         })}
         <button
