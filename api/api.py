@@ -220,7 +220,6 @@ def lists():
     user = dict(id=session["id"])
     # Get shopping lists for current user
     shopping_lists = get_shopping_lists(user)
-
     return jsonify(shopping_lists)
 
 
@@ -236,10 +235,10 @@ def list_create():
         # Create list object
         list = dict(name=title[1], elements=[], userid=session["id"])
 
-        for i in range(0, len(items), 3):
+        for i in range(0, len(items), 4):
             element = dict()
 
-            for k in range(i, i+3):
+            for k in range(i, i+4):
                 element[items[k][0]] = items[k][1]
             
             list["elements"].append(element)

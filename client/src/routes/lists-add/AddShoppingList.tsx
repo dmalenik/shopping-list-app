@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Form, useActionData} from 'react-router-dom';
 
 export const AddShoppingList = () => {
-  const [idArr, setIdArr] = useState([crypto.randomUUID()]);
+  const [keys, setKeys] = useState([crypto.randomUUID()]);
   const actionData = useActionData();
 
   return (
@@ -10,18 +10,19 @@ export const AddShoppingList = () => {
       <Form method="post">
         <input placeholder="title" name="title" />
         Elements:
-        {idArr.map(id => {
+        {keys.map(k => {
           return (
-            <fieldset key={id}>
+            <fieldset key={k}>
               <input placeholder="item" name="item" />
               <input placeholder="measure" name="measure" />
               <input placeholder="unit" name="unit" />
+              <input type="hidden" name="id" defaultValue={k} />
             </fieldset>
           );
         })}
         <button
           type="button"
-          onClick={() => setIdArr(arr => [...arr, crypto.randomUUID()])}
+          onClick={() => setKeys(k => [...k, crypto.randomUUID()])}
         >
           +
         </button>

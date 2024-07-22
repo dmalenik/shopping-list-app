@@ -2,16 +2,54 @@ import React from 'react';
 import {Outlet, useLoaderData, Link} from 'react-router-dom';
 
 export const ShoppingLists = () => {
-  const loaderData = useLoaderData();
+  const shoppingLists: any = useLoaderData();
 
   return (
     <div>
-      {loaderData ? (
-        <div>
-          {loaderData.map((l, i) => (
-            <div key={i}>{l.id}</div>
-          ))}
-        </div>
+      {shoppingLists && !shoppingLists.success ? (
+        shoppingLists.map(
+          ({
+            id,
+            name,
+            elements,
+            date,
+            userid,
+          }: {
+            id: string;
+            name: string;
+            elements: {
+              item: string;
+              measure: string;
+              unit: string;
+              id: string;
+            }[];
+            date: string;
+            userid: string;
+          }) => (
+            <div key={id}>
+              <div>{name}</div>
+              {elements.map(
+                ({
+                  item,
+                  measure,
+                  unit,
+                  id,
+                }: {
+                  item: string;
+                  measure: string;
+                  unit: string;
+                  id: string;
+                }) => (
+                  <div key={id}>
+                    <div>{item}</div>
+                    <div>{measure}</div>
+                    <div>{unit}</div>
+                  </div>
+                )
+              )}
+            </div>
+          )
+        )
       ) : (
         <div>No lists for now</div>
       )}

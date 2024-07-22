@@ -75,7 +75,7 @@ const router = createBrowserRouter([
                 loader: shoppingListsLoader,
                 children: [
                   {
-                    path: 'create',
+                    path: 'add',
                     element: <AddShoppingList />,
                     action: addShoppingListAction,
                   },

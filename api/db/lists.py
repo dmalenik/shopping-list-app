@@ -23,10 +23,17 @@ def get_shopping_lists(user):
 
             shopping_lists = list()
 
-            for lists in res:
-                shopping_lists.append(dict(lists))
+            for l in res:
+                
+                l_elems = list()
+                for element in l["elements"]:
+                    l_elems.append(json.loads(element))
 
-    return shopping_lists if res else None
+                l["elements"] = l_elems
+
+                shopping_lists.append(dict(l))
+
+            return shopping_lists if res else None
 
 
 def create_list(list):
