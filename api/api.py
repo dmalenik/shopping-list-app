@@ -2,7 +2,7 @@ import os
 import sys
 
 from flask import Flask, request, redirect, url_for, session, jsonify, Request
-from flask_cors import CORS
+# from flask_cors import CORS
 from flask_session import Session
 
 from werkzeug.datastructures import ImmutableOrderedMultiDict
@@ -18,16 +18,13 @@ from lists import get_shopping_lists, create_list, edit_list, delete_list
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
 
+Session(app)
+
 # Change the order of request data
 class OrderedParamsContainer(Request):
     parameter_storage_class = ImmutableOrderedMultiDict
 
 app.request_class = OrderedParamsContainer
-
-Session(app)
-
-# Enable CORS
-CORS(app, origins=["http://127.0.0.1:3000"], resources=[r"/api/*"], supports_credentials=True)
 
 
 # Modify requests
