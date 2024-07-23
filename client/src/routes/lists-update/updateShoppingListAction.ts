@@ -14,7 +14,6 @@ const postShoppingListData = async (formData: FormData) => {
       body: formData,
     });
     const {success}: any = await response.json();
-    console.log(success);
 
     return success && redirect('..');
   } catch (error) {
