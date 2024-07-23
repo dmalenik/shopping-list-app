@@ -47,15 +47,10 @@ def create_list(list):
 def edit_list(query_list, list_edit):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
+
             if list_edit["name"]:
-                curs.execute(f"UPDATE {db_table} SET name = %s WHERE id = %s;", (list_edit["name"], query_list["id"]))
-            
-            # Add new element to list
-            # Edit existing element
-            # Delete existing element
-            if list_edit["elements"]:
                 list_to_string_elements = [json.dumps(element) for element in list_edit["elements"]]
-                curs.execute(f"UPDATE {db_table} SET elements = %s WHERE id = %s;", (list_to_string_elements, query_list["id"]))
+                curs.execute(f"UPDATE {db_table} SET name = %s, elements = %s WHERE id = %s;", (list_edit["name"], list_to_string_elements, query_list["id"]))
 
 
 def delete_list(list):
