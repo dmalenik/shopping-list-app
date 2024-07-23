@@ -2,7 +2,6 @@ import os
 import sys
 
 from flask import Flask, request, redirect, url_for, session, jsonify, Request
-# from flask_cors import CORS
 from flask_session import Session
 
 from werkzeug.datastructures import ImmutableOrderedMultiDict
