@@ -15,7 +15,10 @@ const postDishUpdateData = async (formData: FormData) => {
     });
     const {success}: any = await response.json();
 
-    return success && redirect('..');
+    return (
+      success &&
+      (formData.get('action') === 'edit' ? redirect('..') : redirect('../..'))
+    );
   } catch (error) {
     return error;
   }

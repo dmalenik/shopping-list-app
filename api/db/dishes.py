@@ -15,23 +15,30 @@ db_table = "testing_dishes"
 def get_dishes_list(user):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
-            curs.execute(f"SELECT * FROM {db_table} WHERE userid = %s;", (user["userid"],))
+            curs.execute(f"SELECT id, dish FROM {db_table} WHERE userid = %s;", (user["userid"],))
             res = curs.fetchall()
     
-    # convert dishes list into dishes dict
-    dishes = list()
+    # Convert dishes list into dishes dict
+    dishes_list = list()
 
     for dish in res:
+        dishes_list.append(dict(dish))
         
-        components = list()
-        for component in dish["components"]:
-            components.append(json.loads(component))
-        
-        dish["components"] = components
+    return dishes_list if res else None
 
-        dishes.append(dict(dish))
 
-    return dishes if res else None
+# Get dish data
+def get_dish_data(query_data):
+    with psycopg2.connect(db) as conn:
+        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
+            curs.execute(f"SELECT * FROM {db_table} WHERE userid = %s AND id = %s;", (query_data["userid"], query_data["dishid"]))
+            res = curs.fetchone()
+
+            res = dict(res)
+            for i in range(len(res["components"])):
+                res["components"][i] = json.loads(res["components"][i])
+    
+    return res if res else None
 
 
 # Add dish data to DB

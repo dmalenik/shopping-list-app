@@ -10,7 +10,7 @@ sys.path.append(os.path.abspath("./db"))
 
 from users import register_user, edit_user_data, delete_user_data, get_user_data, get_user_session_data
 from helpers import login_credentials_valid, register_credentials_valid, dish_exists, list_exists, update_credentials_valid
-from dishes import get_dishes_list, add_dish, edit_dish, delete_dish
+from dishes import get_dishes_list, get_dish_data, add_dish, edit_dish, delete_dish
 from lists import get_shopping_lists, create_list, edit_list, delete_list
 
 
@@ -131,6 +131,17 @@ def dishes():
     user = dict(userid=session["id"])
     dishes_list = get_dishes_list(user)
     return jsonify(dishes_list)
+
+
+@app.route("/api/profile/dishes/<string:id>")
+def dish(id):
+    # Check if session is valid
+    if "id" not in session:
+        return redirect(url_for("logout"))
+    
+    query_data = dict(userid=session["id"], dishid=id)
+    dish_data = get_dish_data(query_data)
+    return jsonify(dish_data)
 
 
 # Create a route to add new dish
