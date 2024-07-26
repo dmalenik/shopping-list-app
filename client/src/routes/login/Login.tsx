@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {useActionData, useNavigate, Form} from 'react-router-dom';
+import {useActionData, useNavigate, Form, Link} from 'react-router-dom';
 
 import {useLoginState} from '../../hooks';
 
@@ -17,6 +17,7 @@ export const Login = () => {
 
   return (
     <div className="login">
+      <Link to={'/'}>Home</Link>
       Hello from Login
       <Form method="post">
         <input name="username" placeholder="Enter name" />

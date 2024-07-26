@@ -7,7 +7,7 @@ export const RequireAuth = () => {
   const [storedValue, setValue] = useLoginState();
 
   return storedValue === false ? (
-    <Navigate to={'/home'} replace={true} />
+    <Navigate to={'/'} replace={true} />
   ) : (
     <Outlet context={[storedValue, setValue]} />
   );

@@ -1,9 +1,10 @@
 import React from 'react';
-import {Form} from 'react-router-dom';
+import {Form, Link} from 'react-router-dom';
 
 export const Register = () => {
   return (
     <div className="register">
+      <Link to={'/'}>Home</Link>
       Hello from Register
       <Form method="post">
         <input type="text" name="username" placeholder="Enter username" />
