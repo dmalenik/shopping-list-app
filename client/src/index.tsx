@@ -23,6 +23,7 @@ import {
   updateShoppingListAction,
 } from './routes/lists-update';
 import {ShoppingList, shoppingListLoader} from './routes/list';
+import {Home} from './routes/home';
 
 const router = createBrowserRouter([
   {
@@ -31,7 +32,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: 'home',
-        element: <div>Home is where you are!</div>,
+        element: <Home />,
         index: true,
       },
       {
