@@ -6,8 +6,6 @@ import json
 
 from dotenv import load_dotenv
 
-from dishes import add_dish
-
 load_dotenv()
 
 db = f"dbname={environ["DATABASE"]} host={environ["DATABASE_HOST"]} user={environ["DATABASE_USER"]} password={environ["DATABASE_PASSWORD"]} port={environ["DATABASE_PORT"]}"
@@ -18,22 +16,29 @@ db_table = "testing_lists"
 def get_shopping_lists(user):
     with psycopg2.connect(db) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
-            curs.execute(f"SELECT * FROM {db_table} WHERE userid = %s;", (user["id"],))
+            curs.execute(f"SELECT id, name FROM {db_table} WHERE userid = %s;", (user["id"],))
             res = curs.fetchall()
 
-            shopping_lists = list()
+    shopping_lists = list()
 
-            for l in res:
-                
-                l_elems = list()
-                for element in l["elements"]:
-                    l_elems.append(json.loads(element))
+    for l in res:
+        shopping_lists.append(dict(l))
 
-                l["elements"] = l_elems
+    return shopping_lists if res else None
+        
 
-                shopping_lists.append(dict(l))
+# Get dish data
+def get_list_data(query_data):
+    with psycopg2.connect(db) as conn:
+        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
+            curs.execute(f"SELECT * FROM {db_table} WHERE id = %s;", (query_data["listid"],))
+            res = curs.fetchone()
 
-            return shopping_lists if res else None
+    res = dict(res)
+    for i in range(len(res["elements"])):
+        res["elements"][i] = json.loads(res["elements"][i])
+    
+    return res if res else None
 
 
 def create_list(list):

@@ -11,7 +11,7 @@ sys.path.append(os.path.abspath("./db"))
 from users import register_user, edit_user_data, delete_user_data, get_user_data, get_user_session_data
 from helpers import login_credentials_valid, register_credentials_valid, dish_exists, list_exists, update_credentials_valid
 from dishes import get_dishes_list, get_dish_data, add_dish, edit_dish, delete_dish
-from lists import get_shopping_lists, create_list, edit_list, delete_list
+from lists import get_shopping_lists, get_list_data, create_list, edit_list, delete_list
 
 
 app = Flask(__name__)
@@ -228,6 +228,17 @@ def lists():
     # Get shopping lists for current user
     shopping_lists = get_shopping_lists(user)
     return jsonify(shopping_lists)
+
+
+@app.route("/api/profile/lists/<string:id>")
+def shopping_list(id):
+    # Check if session is valid
+    if "id" not in session:
+        return redirect(url_for("logout"))
+    
+    query_data = dict(userid=session["id"], listid=id)
+    list_data = get_list_data(query_data)
+    return jsonify(list_data)
 
 
 # Create new shopping list

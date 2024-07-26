@@ -22,6 +22,7 @@ import {
   UpdateShoppingList,
   updateShoppingListAction,
 } from './routes/lists-update';
+import {ShoppingList, shoppingListLoader} from './routes/list';
 
 const router = createBrowserRouter([
   {
@@ -87,14 +88,21 @@ const router = createBrowserRouter([
                 loader: shoppingListsLoader,
                 children: [
                   {
+                    path: ':id',
+                    loader: shoppingListLoader,
+                    element: <ShoppingList />,
+                    children: [
+                      {
+                        path: 'update',
+                        element: <UpdateShoppingList />,
+                        action: updateShoppingListAction,
+                      },
+                    ],
+                  },
+                  {
                     path: 'add',
                     element: <AddShoppingList />,
                     action: addShoppingListAction,
-                  },
-                  {
-                    path: 'update',
-                    element: <UpdateShoppingList />,
-                    action: updateShoppingListAction,
                   },
                 ],
               },
