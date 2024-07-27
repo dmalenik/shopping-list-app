@@ -24,6 +24,7 @@ import {
 } from './routes/lists-update';
 import {ShoppingList, shoppingListLoader} from './routes/list';
 import {Home} from './routes/home';
+import {Logout, logoutLoader} from './routes/logout';
 
 const router = createBrowserRouter([
   {
@@ -58,55 +59,60 @@ const router = createBrowserRouter([
                 element: <UpdateUserProfile />,
                 action: updateUserProfileAction,
               },
+            ],
+          },
+          {
+            path: 'dishes',
+            element: <Dishes />,
+            loader: dishesLoader,
+            children: [
               {
-                path: 'dishes',
-                element: <Dishes />,
-                loader: dishesLoader,
+                path: ':id',
+                loader: dishLoader,
+                element: <Dish />,
                 children: [
                   {
-                    path: ':id',
-                    loader: dishLoader,
-                    element: <Dish />,
-                    children: [
-                      {
-                        path: 'update',
-                        element: <UpdateDish />,
-                        action: updateDishAction,
-                      },
-                    ],
-                  },
-                  {
-                    path: 'add',
-                    element: <AddDish />,
-                    action: addDishAction,
+                    path: 'update',
+                    element: <UpdateDish />,
+                    action: updateDishAction,
                   },
                 ],
               },
               {
-                path: 'lists',
-                element: <ShoppingLists />,
-                loader: shoppingListsLoader,
-                children: [
-                  {
-                    path: ':id',
-                    loader: shoppingListLoader,
-                    element: <ShoppingList />,
-                    children: [
-                      {
-                        path: 'update',
-                        element: <UpdateShoppingList />,
-                        action: updateShoppingListAction,
-                      },
-                    ],
-                  },
-                  {
-                    path: 'add',
-                    element: <AddShoppingList />,
-                    action: addShoppingListAction,
-                  },
-                ],
+                path: 'add',
+                element: <AddDish />,
+                action: addDishAction,
               },
             ],
+          },
+          {
+            path: 'lists',
+            element: <ShoppingLists />,
+            loader: shoppingListsLoader,
+            children: [
+              {
+                path: ':id',
+                loader: shoppingListLoader,
+                element: <ShoppingList />,
+                children: [
+                  {
+                    path: 'update',
+                    element: <UpdateShoppingList />,
+                    action: updateShoppingListAction,
+                  },
+                ],
+              },
+              {
+                path: 'add',
+                element: <AddShoppingList />,
+                action: addShoppingListAction,
+              },
+            ],
+          },
+          {
+            path: 'logout',
+            element: <Logout />,
+            loader: logoutLoader,
           },
         ],
       },
