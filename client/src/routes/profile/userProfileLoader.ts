@@ -1,3 +1,1 @@
-export const userProfileLoader = async () => {
-  return await fetch('/api/profile');
-};
+export const userProfileLoader = async () => await fetch('/api/profile');

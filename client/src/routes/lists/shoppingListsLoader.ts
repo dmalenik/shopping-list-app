@@ -1,3 +1,2 @@
-export const shoppingListsLoader = async () => {
-  return await fetch('/api/profile/lists');
-};
+export const shoppingListsLoader = async () =>
+  await fetch('/api/profile/lists');

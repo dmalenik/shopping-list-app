@@ -1,3 +1,1 @@
-export const dishesLoader = async () => {
-  return await fetch('/api/profile/dishes');
-};
+export const dishesLoader = async () => await fetch('/api/profile/dishes');
