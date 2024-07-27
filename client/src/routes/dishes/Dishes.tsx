@@ -1,8 +1,12 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Link, Outlet, useLoaderData} from 'react-router-dom';
+import {useLoginState} from '../../hooks';
 
 export const Dishes = () => {
-  const dishes: any = useLoaderData();
+  const dishes: unknown = useLoaderData();
+  const [storedValue, setValue] = useLoginState();
+
+  useEffect(() => dishes?.success && setValue(false), [dishes]);
 
   return (
     <div>

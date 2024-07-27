@@ -1,50 +1,22 @@
 import React, {useEffect} from 'react';
 import {useLoaderData, useNavigate, Outlet, Link} from 'react-router-dom';
-
 import {useLoginState} from '../../hooks';
 
 export const UserProfile = () => {
-  // redirect works with loaders and actions
+  const user: unknown = useLoaderData();
   const [storedValue, setValue] = useLoginState();
-  const sessionData: unknown = useLoaderData();
-  const navigate = useNavigate();
 
   // logout when session timeout
-  useEffect(() => {
-    if (sessionData.success) {
-      setValue(false);
-      navigate('/login');
-    }
-  }, [sessionData]);
-
-  const logoutUser = async () => {
-    try {
-      const response = await fetch('/api/logout');
-      const {success} = await response.json();
-
-      if (success) {
-        setValue(false);
-        navigate('/login');
-      }
-    } catch (error) {
-      return error;
-    }
-  };
+  useEffect(() => user?.success && setValue(false), [user]);
 
   return (
     <div>
-      {sessionData.id && (
+      {user?.id && (
         <div>
-          Hello, {sessionData.username}! Your id is {sessionData.id}, your email
-          - {sessionData.email}
+          Hello, {user.username}! Your id is {user.id}, your email -{user.email}
         </div>
       )}
-      <button type="button" onClick={logoutUser}>
-        Logout
-      </button>
       <Link to={'update'}>Update</Link>
-      <Link to={'dishes'}>Dishes</Link>
-      <Link to={'lists'}>Lists</Link>
       <Outlet />
     </div>
   );

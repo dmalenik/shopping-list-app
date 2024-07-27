@@ -53,16 +53,16 @@ const FormButton = styled.button`
 `;
 
 export const Login = () => {
-  const actionData = useActionData();
+  const login = useActionData();
   const navigate = useNavigate();
   const [storedValue, setValue] = useLoginState();
 
   useEffect(() => {
-    if (actionData) {
+    if (login) {
       setValue(true);
       navigate('/profile');
     }
-  }, [actionData]);
+  }, [login]);
 
   return (
     <Container>
