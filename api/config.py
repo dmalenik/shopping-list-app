@@ -5,9 +5,10 @@ from dotenv import load_dotenv
 
 # Responses are stored in a server storage
 SESSION_TYPE = "filesystem"
+
 # User remains logged in for 1 hour
-# app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(hours=1)
-PERMANENT_SESSION_LIFETIME = timedelta(minutes=1)
+PERMANENT_SESSION_LIFETIME = timedelta(hours=1)
+
 # Use it to cryptographically-sign cookies
 SESSION_USE_SIGNER = True
 
