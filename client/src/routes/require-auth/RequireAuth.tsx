@@ -9,10 +9,6 @@ export const RequireAuth = () => {
     <Navigate to={'login'} replace={true} />
   ) : (
     <div>
-      <Link to={'profile'}>Profile</Link>
-      <Link to={'dishes'}>Dishes</Link>
-      <Link to={'lists'}>Lists</Link>
-      <Link to={'logout'}>Logout</Link>
       <Outlet context={[storedValue, setValue]} />
     </div>
   );
