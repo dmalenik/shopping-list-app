@@ -1,6 +1,30 @@
 import React, {useEffect} from 'react';
 import {useLoaderData, useNavigate, Outlet, Link} from 'react-router-dom';
 import {useLoginState} from '../../hooks';
+import {styled} from 'styled-components';
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 2%;
+`;
+
+const Navigation = styled.nav`
+  align-self: end;
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  column-gap: 15px;
+`;
+
+const ProfileLink = styled(Link)<{$isActive?: boolean}>`
+  color: ${props => (props.$isActive ? 'red' : 'inherit')};
+`;
+
+const Main = styled.main`
+  align-self: center;
+  margin-top: 3%;
+`;
 
 export const UserProfile = () => {
   const user: unknown = useLoaderData();
@@ -10,14 +34,23 @@ export const UserProfile = () => {
   useEffect(() => user?.success && setValue(false), [user]);
 
   return (
-    <div>
+    <Container>
+      <Navigation>
+        <ProfileLink to={'.'} $isActive>
+          Profile
+        </ProfileLink>
+        <Link to={'../dishes'}>Dishes</Link>
+        <Link to={'../lists'}>Lists</Link>
+        <Link to={'../logout'}>Logout</Link>
+      </Navigation>
       {user?.id && (
-        <div>
-          Hello, {user.username}! Your id is {user.id}, your email -{user.email}
-        </div>
+        <Main>
+          <h2>Welcome, {user.username}!</h2>
+          <p>Email: {user.email}</p>
+          <Link to={'update'}>Update</Link>
+        </Main>
       )}
-      <Link to={'update'}>Update</Link>
       <Outlet />
-    </div>
+    </Container>
   );
 };
