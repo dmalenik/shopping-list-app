@@ -33,13 +33,17 @@ const Header = styled.header`
   margin-top: 3%;
 `;
 
-const LoginForm = styled(Form)`
-  margin-top: 1%;
+const Main = styled.main`
   align-self: center;
+  width: 100%;
+`;
+
+const LoginForm = styled(Form)`
   display: flex;
   flex-direction: column;
   row-gap: 20px;
   width: 20%;
+  margin: 1% auto auto;
 `;
 
 const FormController = styled.div`
@@ -78,17 +82,23 @@ export const Login = () => {
       <Header>
         <h2>Login!</h2>
       </Header>
-      <LoginForm method="post">
-        <FormController>
-          <label htmlFor="username">Username</label>
-          <input name="username" placeholder="Your name" />
-        </FormController>
-        <FormController>
-          <label htmlFor="password">Password</label>
-          <input type="password" name="password" placeholder="Your password" />
-        </FormController>
-        <FormButton type="submit">Login</FormButton>
-      </LoginForm>
+      <Main>
+        <LoginForm method="post">
+          <FormController>
+            <label htmlFor="username">Username</label>
+            <input name="username" placeholder="Your name" />
+          </FormController>
+          <FormController>
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Your password"
+            />
+          </FormController>
+          <FormButton type="submit">Login</FormButton>
+        </LoginForm>
+      </Main>
     </Container>
   );
 };
