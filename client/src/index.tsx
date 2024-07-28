@@ -67,21 +67,21 @@ const router = createBrowserRouter([
             loader: dishesLoader,
             children: [
               {
-                path: ':id',
-                loader: dishLoader,
-                element: <Dish />,
-                children: [
-                  {
-                    path: 'update',
-                    element: <UpdateDish />,
-                    action: updateDishAction,
-                  },
-                ],
-              },
-              {
                 path: 'add',
                 element: <AddDish />,
                 action: addDishAction,
+              },
+            ],
+          },
+          {
+            path: 'dishes/:id',
+            loader: dishLoader,
+            element: <Dish />,
+            children: [
+              {
+                path: 'update',
+                element: <UpdateDish />,
+                action: updateDishAction,
               },
             ],
           },
