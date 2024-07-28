@@ -1,18 +1,46 @@
 import React from 'react';
 import {Form, useOutletContext} from 'react-router-dom';
+import {styled} from 'styled-components';
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 3%;
+`;
+
+const UpdateDishForm = styled(Form)`
+  margin-top: 3%;
+  display: flex;
+  flex-direction: column;
+`;
+
+const FormController = styled.div`
+  display: flex;
+  flex-direction: column;
+  row-gap: 5px;
+`;
+
+const DeleteDishForm = styled(Form)`
+  margin-top: 3%;
+`;
 
 export const UpdateDish = () => {
   const [updates, setUpdates] = useOutletContext();
 
   return (
-    <div>
-      <Form method="post">
-        <input
-          name="dishname"
-          placeholder="new dish name"
-          defaultValue={updates?.dish}
-          onChange={Event => setUpdates({...updates, dish: Event.target.value})}
-        />
+    <Container>
+      <UpdateDishForm method="post">
+        <FormController>
+          <label htmlFor="dishname">Dish name</label>
+          <input
+            name="dishname"
+            placeholder="Dish name"
+            defaultValue={updates?.dish}
+            onChange={Event =>
+              setUpdates({...updates, dish: Event.target.value})
+            }
+          />
+        </FormController>
         Components:
         {updates?.components.map((c, i) => {
           const {name, unit, size, id} = c;
@@ -102,12 +130,12 @@ export const UpdateDish = () => {
         <input type="hidden" name="dishid" value={updates?.id} />
         <input type="hidden" name="action" value="edit" />
         <button type="submit">Update dish</button>
-      </Form>
-      <Form method="post">
+      </UpdateDishForm>
+      <DeleteDishForm method="post">
         <input type="hidden" name="id" value={updates?.id} />
         <input type="hidden" name="action" value="delete" />
         <button type="submit">Delete dish</button>
-      </Form>
-    </div>
+      </DeleteDishForm>
+    </Container>
   );
 };
