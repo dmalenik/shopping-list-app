@@ -31,13 +31,17 @@ const Header = styled.header`
   margin-top: 3%;
 `;
 
-const RegisterForm = styled(Form)`
-  margin-top: 1%;
+const Main = styled.main`
   align-self: center;
+  width: 100%;
+`;
+
+const RegistrationForm = styled(Form)`
   display: flex;
   flex-direction: column;
   row-gap: 20px;
   width: 20%;
+  margin: 1% auto auto;
 `;
 
 const FormController = styled.div`
@@ -65,21 +69,27 @@ export const Register = () => {
       <Header>
         <h2>Register account!</h2>
       </Header>
-      <RegisterForm method="post">
-        <FormController>
-          <label htmlFor="username">Username</label>
-          <input type="text" name="username" placeholder="Your username" />
-        </FormController>
-        <FormController>
-          <label htmlFor="email">Email</label>
-          <input type="text" name="email" placeholder="Your email" />
-        </FormController>
-        <FormController>
-          <label htmlFor="password">Password</label>
-          <input type="password" name="password" placeholder="Your password" />
-        </FormController>
-        <FormButton type="submit">Register</FormButton>
-      </RegisterForm>
+      <Main>
+        <RegistrationForm method="post">
+          <FormController>
+            <label htmlFor="username">Username</label>
+            <input type="text" name="username" placeholder="Your username" />
+          </FormController>
+          <FormController>
+            <label htmlFor="email">Email</label>
+            <input type="text" name="email" placeholder="Your email" />
+          </FormController>
+          <FormController>
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Your password"
+            />
+          </FormController>
+          <FormButton type="submit">Register</FormButton>
+        </RegistrationForm>
+      </Main>
     </Container>
   );
 };
