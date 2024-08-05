@@ -13,30 +13,32 @@ db_table = "testing_users"
 
 
 # Implement helper functions for user data handling
+def register_credentials_valid(credentials):
+    with connect(db) as conn:
+        with conn.cursor(cursor_factory=DictCursor) as curs:
+            curs.execute(f"SELECT username FROM {db_table} WHERE username = %s;", (credentials["username"],))
+            res = curs.fetchone()
 
+    if not res:
+        return True if credentials["username"] and credentials["email"] and credentials["password"] else False
+    
+    return False
+            
 
 def login_credentials_valid(credentials):
-    with psycopg2.connect(db) as conn:
-        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
+    with connect(db) as conn:
+        with conn.cursor(cursor_factory=DictCursor) as curs:
             curs.execute(f"SELECT username, hash FROM {db_table} WHERE username = %s;", (credentials["username"],))
             res = curs.fetchone()
             
-            # Handle NoneType error
-            if res:
-                res = dict(res)
-                # Compare data to credentials provided in the input
-                if res["username"] == credentials["username"] and check_password_hash(res["hash"], credentials["password"]):
-                    return True
+    # Handle NoneType error
+    if res:
+        # Compare data to credentials provided in the input
+        res = dict(res)
+        if res["username"] == credentials["username"] and check_password_hash(res["hash"], credentials["password"]):
+            return True
     
     return False
-
-
-def register_credentials_valid(credentials):
-    with psycopg2.connect(db) as conn:
-        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
-            curs.execute(f"SELECT username FROM {db_table} WHERE username = %s;", (credentials["username"],))
-            if not curs.fetchone():
-                return True if credentials["username"] and credentials["email"] and credentials["password"] else False
 
 
 # Update function

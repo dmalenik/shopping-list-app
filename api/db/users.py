@@ -14,10 +14,14 @@ db_table = "testing_users"
 
 # Register a new user
 def register_user(user):
-    with psycopg2.connect(db) as conn:
-        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
+    with connect(db) as conn:
+        with conn.cursor(cursor_factory=DictCursor) as curs:
             hash = generate_password_hash(user["password"])
             curs.execute(f"INSERT INTO {db_table} (username, email, hash) VALUES (%s, %s, %s);", (user["username"], user["email"], hash))
+    
+    return
+
+
 # User is logged in
 # Get user's data
 def get_user(credentials):
@@ -30,28 +34,12 @@ def get_user(credentials):
 
 
 def get_user_session_data(credentials):
-    with psycopg2.connect(db) as conn:
-        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
+    with connect(db) as conn:
+        with conn.cursor(cursor_factory=DictCursor) as curs:
             curs.execute(f"SELECT id, username, email FROM {db_table} WHERE username = %s;", (credentials["username"],))
-
             res = curs.fetchone()
-            if res:
-                res = dict(res)
         
-    return res
-
-
-# Get logged in user's data
-def get_user_data(credentials):
-    with psycopg2.connect(db) as conn:
-        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
-            curs.execute(f"SELECT id, username, email FROM {db_table} WHERE id = %s;", (credentials["id"],))
-
-            res = curs.fetchone()
-            if res:
-                res = dict(res)
-
-    return res
+    return dict(res) if res else None
 
 
 # Edit user credentials
