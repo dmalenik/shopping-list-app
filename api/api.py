@@ -66,10 +66,9 @@ def login():
             user = get_user_session_data(credentials)
 
             session["id"] = user["id"]
-
-            return jsonify(success=True)
+            return jsonify(login=True)
         
-    return jsonify(success=False)
+    return jsonify(login=False)
 
 
 # Logout user
@@ -77,7 +76,7 @@ def login():
 def logout():
     session.clear()
     
-    return jsonify(success=True)
+    return jsonify(logout=True)
 
 
 # Implement routes related to user
