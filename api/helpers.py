@@ -50,7 +50,6 @@ def update_credentials_valid(credentials):
 
 
 # Implement helper functions for dish data handling
-
 # Checks if dish exists in db
 def dish_available(dish):
     with connect(db) as conn:

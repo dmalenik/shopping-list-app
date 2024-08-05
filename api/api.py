@@ -166,37 +166,37 @@ def dish_update():
     
     if request.method == "POST":
         if request.form["action"] == "edit":
-            dishname, *components, dishid, action = request.form.items(multi=True)
+            dishname, *ingridients, dishid, action = request.form.items(multi=True)
             # Create dish object to change
-            dish = dict(id=dishid[1])
+            dish = dict(id=dishid[1], userid=session["id"])
 
             # Create object with dish updates
-            dish_update = dict(name=dishname[1], list=list())
+            updates = dict(name=dishname[1], ingridients=list())
 
-            for i in range(0, len(components), 4):
-                component = dict()
+            for i in range(0, len(ingridients), 4):
+                ingridient = dict()
 
                 for k in range(i, i+4):
-                    component[components[k][0]] = components[k][1]
+                    ingridient[ingridients[k][0]] = ingridients[k][1]
                 
-                dish_update["list"].append(component)
+                updates["ingridients"].append(ingridient)
             
             # Add dish updates to db    
-            if dish_exists(dish):
-                edit_dish(dish, dish_update)
+            if dish_available(dish):
+                update_dish(dish, updates)
                 return jsonify(success=True)
 
         if request.form["action"] == "delete":
             id, action = request.form.items(multi=True)
             # Create dish object to change
-            dish = dict(id=id[1], user=session["id"])
+            dish = dict(id=id[1], userid=session["id"])
 
             # Delete dish data
-            if dish_exists(dish):
+            if dish_available(dish):
                 delete_dish(dish)
-                return jsonify(success=True)
+                return jsonify(delete=True)
             
-        return jsonify(success=False)
+    return jsonify(success=False)
 
 
 # Implement routes related to shopping lists

@@ -13,12 +13,9 @@ const postDishUpdateData = async (formData: FormData) => {
       mode: 'cors',
       body: formData,
     });
-    const {success}: any = await response.json();
+    const finalResponse: any = await response.json();
 
-    return (
-      success &&
-      (formData.get('action') === 'edit' ? redirect('..') : redirect('../..'))
-    );
+    return finalResponse?.delete ? redirect('../../home') : finalResponse;
   } catch (error) {
     return error;
   }
