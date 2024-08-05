@@ -8,10 +8,10 @@ from werkzeug.datastructures import ImmutableOrderedMultiDict
 
 sys.path.append(os.path.abspath("./db"))
 
-from users import register_user, edit_user_data, delete_user_data, get_user_data, get_user_session_data
-from helpers import login_credentials_valid, register_credentials_valid, dish_exists, list_exists, update_credentials_valid
-from dishes import get_dishes_list, get_dish_data, add_dish, edit_dish, delete_dish
-from lists import get_shopping_lists, get_list_data, create_list, edit_list, delete_list
+from users import register_user, update_user, delete_user, get_user, get_user_session_data
+from helpers import login_credentials_valid, register_credentials_valid, dish_available, item_exists, update_credentials_valid
+from dishes import get_dishes_list, get_dish, add_dish, update_dish, delete_dish
+from items import get_shopping_list, add_item, update_item, delete_item
 
 
 app = Flask(__name__)
@@ -64,7 +64,6 @@ def login():
         if login_credentials_valid(credentials):
             # Set session for available user
             user = get_user_session_data(credentials)
-
             session["id"] = user["id"]
             return jsonify(login=True)
         

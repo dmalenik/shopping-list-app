@@ -9,9 +9,6 @@ SESSION_TYPE = "filesystem"
 # User remains logged in for 1 hour
 PERMANENT_SESSION_LIFETIME = timedelta(hours=1)
 
-# For testing
-# PERMANENT_SESSION_LIFETIME = timedelta(minutes=1)
-
 # Use it to cryptographically-sign cookies
 SESSION_USE_SIGNER = True
 
