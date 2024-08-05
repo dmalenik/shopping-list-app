@@ -11,6 +11,11 @@ import {Home, homeLoader, homeAction} from './routes/home';
 import {AddDish, addDishAction} from './routes/dish-add';
 import {Logout, logoutLoader} from './routes/logout';
 import {FoodCard, foodCardLoader, updateDishAction} from './routes/food-card';
+import {
+  handleShoppingListItemAction,
+  ShoppingList,
+  shoppingListLoader,
+} from './routes/shopping-list';
 
 const router = createBrowserRouter([
   {
@@ -54,28 +59,11 @@ const router = createBrowserRouter([
                 action: updateDishAction,
               },
           {
-            path: 'lists',
-            element: <ShoppingLists />,
-            loader: shoppingListsLoader,
-            children: [
-              {
-                path: ':id',
+            path: 'home/list',
+            element: <ShoppingList />,
                 loader: shoppingListLoader,
-                element: <ShoppingList />,
-                children: [
-                  {
-                    path: 'update',
-                    element: <UpdateShoppingList />,
-                    action: updateShoppingListAction,
-                  },
-                ],
-              },
-              {
-                path: 'add',
-                element: <AddShoppingList />,
-                action: addShoppingListAction,
-              },
-            ],
+            action: handleShoppingListItemAction,
+            id: 'list',
           },
           {
             path: 'logout',
