@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 db = f"dbname={environ["DATABASE"]} host={environ["DATABASE_HOST"]} user={environ["DATABASE_USER"]} password={environ["DATABASE_PASSWORD"]} port={environ["DATABASE_PORT"]}"
-db_table = "testing_users"
+db_table = "users"
 
 
 # Implement helper functions for user data handling

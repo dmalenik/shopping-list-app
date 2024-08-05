@@ -9,8 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 db = f"dbname={environ["DATABASE"]} host={environ["DATABASE_HOST"]} user={environ["DATABASE_USER"]} password={environ["DATABASE_PASSWORD"]} port={environ["DATABASE_PORT"]}"
-db_table = "testing_users"
-
+db_table = "users"
 
 # Register a new user
 def register_user(user):
