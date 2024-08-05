@@ -8,14 +8,14 @@ export const addDishAction = async ({request}: any) => {
 
 const postDishData = async (formData: FormData) => {
   try {
-    const response = await fetch('/api/profile/dishes/add', {
+    const response = await fetch('/api/home/dish/add', {
       method: 'POST',
       mode: 'cors',
       body: formData,
     });
     const {success}: any = await response.json();
 
-    return success && redirect('..');
+    return (success && redirect('../home')) || null;
   } catch (error) {
     return error;
   }

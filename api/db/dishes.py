@@ -36,11 +36,11 @@ def get_dish_data(query_data):
 
 # Add dish data to DB
 def add_dish(dish):
-    with psycopg2.connect(db) as conn:
-        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
-            # Adapt objects
-            list_to_json_components = [json.dumps(component) for component in dish["components"]]
-            curs.execute(f"INSERT INTO {db_table}(dish, components, userid) VALUES (%s, %s, %s);", (dish["dish"], list_to_json_components, dish["user"]))
+    with connect(db) as conn:
+        with conn.cursor(cursor_factory=DictCursor) as curs:
+            curs.execute(f"INSERT INTO {db_table}(name, ingridients, logo, userid) VALUES (%s, %s, %s, %s);", (dish["name"], dumps(dish["ingridients"]), dish["logo"], dish["userid"]))
+
+    return
 
 
 # Update dish data

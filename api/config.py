@@ -19,3 +19,7 @@ SESSION_USE_SIGNER = True
 load_dotenv()
 SECRET_KEY = os.environ["SECRET_KEY"]
 
+# Set uploads folder
+upload_folder = os.path.join("static", "uploads")
+UPLOAD_FOLDER = upload_folder
+

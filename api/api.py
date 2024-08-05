@@ -120,32 +120,8 @@ def user_update():
 
 
 # Implement routes related to dishes
-# Create a route to see dishes
-@app.route("/api/profile/dishes")
-def dishes():
-    # Check if session is valid
-    if "id" not in session:
-        return redirect(url_for("logout"))
-
-    # Get dishes list for current user
-    user = dict(userid=session["id"])
-    dishes_list = get_dishes_list(user)
-    return jsonify(dishes_list)
-
-
-@app.route("/api/profile/dishes/<string:id>")
-def dish(id):
-    # Check if session is valid
-    if "id" not in session:
-        return redirect(url_for("logout"))
-    
-    query_data = dict(userid=session["id"], dishid=id)
-    dish_data = get_dish_data(query_data)
-    return jsonify(dish_data)
-
-
 # Create a route to add new dish
-@app.route("/api/profile/dishes/add", methods=["GET", "POST"])
+@app.route("/api/home/dish/add", methods=["GET", "POST"])
 def dish_add():
     # Check if session is valid
     if "id" not in session:
@@ -153,25 +129,32 @@ def dish_add():
     
     if request.method == "POST":
         # Create dish object to add
-        name, *components = request.form.items(multi=True)
+        dishname, *ingridients = request.form.items(multi=True)
+        dish = dict(name=dishname[1], ingridients=list(), logo=None, userid=session["id"])
 
-        dish = dict(dish=name[1], components=list(), id=None, user=session["id"])
-
-        for i in range(0, len(components), 4):
-            component = dict()
+        for i in range(0, len(ingridients), 4):
+            ingridient = dict()
 
             for k in range(i, i+4):
-                component[components[k][0]] = components[k][1]
+                ingridient[ingridients[k][0]] = ingridients[k][1]
             
-            dish["components"].append(component)
+            dish["ingridients"].append(ingridient)
+
+        # Handle image file
+        if "logo" in request.files:
+            logo = request.files["logo"]
+            path = os.path.join(app.config["UPLOAD_FOLDER"], logo.filename)
+            logo.save(path)
+            dish["logo"] = path
 
         # Check if dish with the same name exists
-        if dish_exists(dish):
+        if dish_available(dish):
             return jsonify(success=False)
-        
-        # Was error due to similar with dish_add function names
+
         add_dish(dish)
         return jsonify(success=True)
+    
+    return jsonify(status=True)
 
 
 # Create a route to edit dishes

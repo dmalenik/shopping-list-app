@@ -52,13 +52,13 @@ def update_credentials_valid(credentials):
 # Implement helper functions for dish data handling
 
 # Checks if dish exists in db
-# User have to provide current dish name to be changed
-def dish_exists(dish):
-    with psycopg2.connect(db) as conn:
-        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:  
-            curs.execute(f"SELECT id FROM testing_dishes WHERE id = %s;", (dish["id"],))
+def dish_available(dish):
+    with connect(db) as conn:
+        with conn.cursor(cursor_factory=DictCursor) as curs:
+            curs.execute(f"SELECT name FROM dishes WHERE userid = %s;", (dish["userid"],))
+            res = curs.fetchone()
 
-            return True if curs.fetchone() else False
+    return bool(res)
 
 
 # Implement helper functions for shopping lists data handling

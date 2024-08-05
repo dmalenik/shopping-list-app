@@ -8,6 +8,7 @@ import {Register, registerAction} from './routes/register';
 import {Login, LoginError, loginAction} from './routes/login';
 import {RequireAuth} from './routes/require-auth';
 import {Home, homeLoader, homeAction} from './routes/home';
+import {AddDish, addDishAction} from './routes/dish-add';
 import {Logout, logoutLoader} from './routes/logout';
 
 const router = createBrowserRouter([
@@ -40,16 +41,10 @@ const router = createBrowserRouter([
             action: homeAction,
           },
           {
-            path: 'dishes',
-            element: <Dishes />,
-            loader: dishesLoader,
-            children: [
-              {
-                path: 'add',
+            path: 'home/dish/add',
                 element: <AddDish />,
                 action: addDishAction,
-              },
-            ],
+            loader: async () => await fetch('/api/home/dish/add'),
           },
           {
             path: 'dishes/:id',
