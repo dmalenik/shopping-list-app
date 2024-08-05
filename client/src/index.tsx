@@ -7,23 +7,7 @@ import {App} from './routes/app';
 import {Register, registerAction} from './routes/register';
 import {Login, LoginError, loginAction} from './routes/login';
 import {RequireAuth} from './routes/require-auth';
-import {UserProfile, userProfileLoader} from './routes/profile';
-import {
-  UpdateUserProfile,
-  updateUserProfileAction,
-} from './routes/profile-update';
-import {Dishes, dishesLoader} from './routes/dishes';
-import {Dish, dishLoader} from './routes/dish';
-import {addDishAction, AddDish} from './routes/dishes-add';
-import {UpdateDish, updateDishAction} from './routes/dishes-update';
-import {ShoppingLists, shoppingListsLoader} from './routes/lists';
-import {AddShoppingList, addShoppingListAction} from './routes/lists-add';
-import {
-  UpdateShoppingList,
-  updateShoppingListAction,
-} from './routes/lists-update';
-import {ShoppingList, shoppingListLoader} from './routes/list';
-import {Home} from './routes/home';
+import {Home, homeLoader, homeAction} from './routes/home';
 import {Logout, logoutLoader} from './routes/logout';
 
 const router = createBrowserRouter([
@@ -50,16 +34,10 @@ const router = createBrowserRouter([
         element: <RequireAuth />,
         children: [
           {
-            path: 'profile',
-            element: <UserProfile />,
-            loader: userProfileLoader,
-            children: [
-              {
-                path: 'update',
-                element: <UpdateUserProfile />,
-                action: updateUserProfileAction,
-              },
-            ],
+            path: 'home',
+            element: <Home />,
+            loader: homeLoader,
+            action: homeAction,
           },
           {
             path: 'dishes',

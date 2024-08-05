@@ -13,19 +13,12 @@ db_table = "testing_dishes"
 
 # Get dishes list
 def get_dishes_list(user):
-    with psycopg2.connect(db) as conn:
-        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
-            curs.execute(f"SELECT id, dish FROM {db_table} WHERE userid = %s;", (user["userid"],))
+    with connect(db) as conn:
+        with conn.cursor(cursor_factory=DictCursor) as curs:
+            curs.execute(f"SELECT id, name, logo FROM {db_table} WHERE userid = %s;", (user["id"],))
             res = curs.fetchall()
-    
-    # Convert dishes list into dishes dict
-    dishes_list = list()
 
-    for dish in res:
-        dishes_list.append(dict(dish))
-        
-    return dishes_list if res else None
-
+    return [dict(res[i]) for i in range(len(res))] if res else None
 
 # Get dish data
 def get_dish_data(query_data):

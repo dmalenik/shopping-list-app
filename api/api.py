@@ -79,18 +79,18 @@ def logout():
     return jsonify(logout=True)
 
 
-# Implement routes related to user
-# Display user profile
-@app.route("/api/profile")
-def profile():
+# Display home page 
+@app.route("/api/home")
+def home():
     # Check if session is valid
     if "id" not in session:
         return redirect(url_for("logout"))
     
     # Session name cannot be found because username was changed
     credentials = dict(id=session["id"])
-    user = get_user_data(credentials)
-    return jsonify(user)
+    user = get_user(credentials)
+    dishes = get_dishes_list(credentials)
+    return jsonify(user=user, dishes=dishes)
 
 
 # Update user data

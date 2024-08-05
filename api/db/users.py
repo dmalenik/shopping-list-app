@@ -18,6 +18,15 @@ def register_user(user):
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
             hash = generate_password_hash(user["password"])
             curs.execute(f"INSERT INTO {db_table} (username, email, hash) VALUES (%s, %s, %s);", (user["username"], user["email"], hash))
+# User is logged in
+# Get user's data
+def get_user(credentials):
+    with connect(db) as conn:
+        with conn.cursor(cursor_factory=DictCursor) as curs:
+            curs.execute(f"SELECT id, username, email FROM {db_table} WHERE id = %s;", (credentials["id"],))
+            res = curs.fetchone()
+
+    return dict(res) if res else None
 
 
 def get_user_session_data(credentials):

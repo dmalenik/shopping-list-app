@@ -1,59 +1,50 @@
-import React from 'react';
-import {Link} from 'react-router-dom';
-import {styled} from 'styled-components';
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: 2%;
-`;
-
-const Navigation = styled.nav`
-  align-self: flex-end;
-  margin-top: 1%;
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  font-size: 1.1rem;
-`;
-
-const HomeLink = styled(Link)<{$isActive?: boolean}>`
-  color: ${props => (props.$isActive ? 'red' : 'inherit')};
-`;
-
-const Menu = styled.div`
-  display: flex;
-  column-gap: 10px;
-`;
-
-const Header = styled.header`
-  align-self: center;
-  margin-top: 3%;
-`;
-
-const Main = styled.main`
-  align-self: center;
-  margin-top: 9%;
-`;
+import React, {useEffect, useState} from 'react';
+import {useLoaderData, Link} from 'react-router-dom';
+import {useLoginState} from '../../hooks';
+import {User} from './User';
+import {UpdateUser} from './UpdateUserProfile';
 
 export const Home = () => {
+  const data: unknown = useLoaderData();
+  const [storedValue, setValue] = useLoginState();
+  const [update, setUpdate] = useState(false);
+
+  // // logout when session timeout
+  useEffect(() => data?.logout && setValue(false), [data]);
+
   return (
-    <Container>
-      <Navigation>
-        <HomeLink to={'./'} $isActive>
-          Home
-        </HomeLink>
-        <Menu>
-          <Link to={'register'}>Register</Link>
-          <Link to={'login'}>Login</Link>
-        </Menu>
-      </Navigation>
-      <Header>
-        <h1>Home page!</h1>
-      </Header>
-      <Main>
-        <p>Plan your shoppings here</p>
-      </Main>
-    </Container>
+    <div>
+      <nav>
+        <Link to={'.'}>Home</Link>
+        <Link to={'dish/add'}>Add dish</Link>
+        <Link to={'list'}>Shopping list</Link>
+        <Link to={'../logout'}>Logout</Link>
+      </nav>
+      <main>
+        {update ? (
+          <UpdateUser
+            data={data?.user ?? null}
+            update={() => setUpdate(!update)}
+          />
+        ) : (
+          <User
+            data={data?.user ?? null}
+            stats={{dishes: data?.dishes?.length, items: 41}}
+            update={() => setUpdate(!update)}
+          />
+        )}
+        <section>
+          <h3>What do you want to cook today?</h3>
+          <div>
+            {data?.dishes?.map(({id, name, logo}) => (
+              <div key={id}>
+                <img src={logo} alt="logo" />
+                <Link to={`./dish/${id}`}>{name}</Link>
+              </div>
+            )) ?? <p>Empty list</p>}
+          </div>
+        </section>
+      </main>
+    </div>
   );
 };
