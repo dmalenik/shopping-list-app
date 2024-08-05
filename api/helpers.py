@@ -1,7 +1,7 @@
 from os import environ
 
-import psycopg2
-import psycopg2.extras
+from psycopg2 import connect
+from psycopg2.extras import DictCursor
 from werkzeug.security import check_password_hash
 
 from dotenv import load_dotenv

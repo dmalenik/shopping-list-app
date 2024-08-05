@@ -1,8 +1,8 @@
 from os import environ
 
-import psycopg2
-import psycopg2.extras
-import json
+from psycopg2 import connect
+from psycopg2.extras import DictCursor
+from json import dumps, loads
 
 from dotenv import load_dotenv
 
