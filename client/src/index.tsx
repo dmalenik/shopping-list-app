@@ -8,6 +8,7 @@ import {Register, registerAction} from './routes/register';
 import {Login, LoginError, loginAction} from './routes/login';
 import {RequireAuth} from './routes/require-auth';
 import {Home, homeLoader, homeAction} from './routes/home';
+import {MainPage} from './routes/main';
 import {AddDish, addDishAction} from './routes/dish-add';
 import {Logout, logoutLoader} from './routes/logout';
 import {FoodCard, foodCardLoader, updateDishAction} from './routes/food-card';
@@ -23,7 +24,7 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        element: <Home />,
+        element: <MainPage />,
         index: true,
       },
       {
@@ -48,20 +49,20 @@ const router = createBrowserRouter([
           },
           {
             path: 'home/dish/add',
-                element: <AddDish />,
-                action: addDishAction,
+            element: <AddDish />,
+            action: addDishAction,
             loader: async () => await fetch('/api/home/dish/add'),
           },
           {
             path: 'home/dish/:id',
             element: <FoodCard />,
             loader: foodCardLoader,
-                action: updateDishAction,
-              },
+            action: updateDishAction,
+          },
           {
             path: 'home/list',
             element: <ShoppingList />,
-                loader: shoppingListLoader,
+            loader: shoppingListLoader,
             action: handleShoppingListItemAction,
             id: 'list',
           },

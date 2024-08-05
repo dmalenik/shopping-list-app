@@ -61,11 +61,11 @@ def dish_available(dish):
 
 
 # Implement helper functions for shopping lists data handling
-
-
-def list_exists(query_list):
-    with psycopg2.connect(db) as conn:
-        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:    
-            curs.execute(f"SELECT id FROM testing_lists WHERE id = %s;", (query_list["id"],))
+def item_exists(query):
+    with connect(db) as conn:
+        with conn.cursor(cursor_factory=DictCursor) as curs:    
+            curs.execute(f"SELECT id FROM items WHERE id = %s;", (query["id"],))
+            res = curs.fetchone()
             
-            return True if curs.fetchone() else False
+    return bool(res)
+

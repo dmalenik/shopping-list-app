@@ -224,43 +224,24 @@ def shopping_list():
     return jsonify(sh_list)
 
 
-@app.route("/api/profile/lists/<string:id>")
-def shopping_list(id):
-    # Check if session is valid
-    if "id" not in session:
-        return redirect(url_for("logout"))
-    
-    query_data = dict(userid=session["id"], listid=id)
-    list_data = get_list_data(query_data)
-    return jsonify(list_data)
-
-
-# Create new shopping list
-@app.route("/api/profile/lists/create", methods=["GET", "POST"])
-def list_create():
+# Add new item to shopping list
+@app.route("/api/home/item/add", methods=["GET", "POST"])
+def item_add():
     # Check if session is valid
     if "id" not in session:
         return redirect(url_for("logout"))
     
     if request.method == "POST":
-        title, *items = request.form.items(multi=True)
-        # Create list object
-        list = dict(name=title[1], elements=[], userid=session["id"])
-
-        for i in range(0, len(items), 4):
-            element = dict()
-
-            for k in range(i, i+4):
-                element[items[k][0]] = items[k][1]
-            
-            list["elements"].append(element)
+        name, quantity, unit = request.form.items(multi=True)
+        # Create item object
+        item = dict(name=name[1], quantity=quantity[1], unit=unit[1], userid=session["id"])
         
-        create_list(list)
+        add_item(item)
         return jsonify(success=True)
 
 
-@app.route("/api/profile/lists/update", methods=["GET", "POST"])
-def list_update():
+@app.route("/api/home/item/update", methods=["GET", "POST"])
+def item_update():
     # Check if session is valid
     if "id" not in session:
         return redirect(url_for("logout"))
@@ -268,37 +249,29 @@ def list_update():
     if request.method == "POST":
 
         # Update existing shopping list
-        if request.form["action"] == "edit":
-            name, *elements, id, action = request.form.items(multi=True)
+        if request.form["action"] == "update":
+            print("list updates", request.form)
+            name, quantity, unit, id, action = request.form.items(multi=True)
             # Create list object to change
-            query_list = dict(id=id[1])
-
+            query = dict(id=id[1], userid=session["id"])
             # Create object with list updates
-            list_edit = dict(name=name[1], elements=list())
-
-            for i in range(0, len(elements), 4):
-                element = dict()
-
-                for k in range(i, i+4):
-                    element[elements[k][0]] = elements[k][1]
-                
-                list_edit["elements"].append(element)
+            updates = dict(name=name[1], quantity=quantity[1], unit=unit[1])
             
-            if list_exists(query_list):
+            if item_exists(query):
                 # Add list updates to db
                 # Fix - update only certain columns in db
-                edit_list(query_list, list_edit)
+                update_item(query, updates)
                 return jsonify(success=True)
 
         # Delete existing shopping list 
         if request.form["action"] == "delete":
             id, action = request.form.items(multi=True)
             # Create list object to change
-            query_list = dict(id=id[1])
+            query = dict(id=id[1], userid=session["id"])
 
-            if list_exists(query_list):
+            if item_exists(query):
                 # Delete list data
-                delete_list(query_list)
+                delete_item(query)
                 return jsonify(success=True)
             
         return jsonify(success=False)
