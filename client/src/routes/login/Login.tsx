@@ -1,60 +1,6 @@
 import React, {useEffect} from 'react';
 import {useActionData, useNavigate, Form, Link} from 'react-router-dom';
-import {styled} from 'styled-components';
-
 import {useLoginState} from '../../hooks';
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: 2%;
-`;
-
-const Navigation = styled.nav`
-  align-self: flex-end;
-  margin-top: 1%;
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  font-size: 1.1rem;
-`;
-
-const Menu = styled.div`
-  display: flex;
-  column-gap: 10px;
-`;
-
-const LoginLink = styled(Link)<{$isActive?: boolean}>`
-  color: ${props => (props.$isActive ? 'red' : 'inherit')};
-`;
-
-const Header = styled.header`
-  align-self: center;
-  margin-top: 3%;
-`;
-
-const Main = styled.main`
-  align-self: center;
-  width: 100%;
-`;
-
-const LoginForm = styled(Form)`
-  display: flex;
-  flex-direction: column;
-  row-gap: 20px;
-  width: 20%;
-  margin: 1% auto auto;
-`;
-
-const FormController = styled.div`
-  display: flex;
-  flex-direction: column;
-  row-gap: 5px;
-`;
-
-const FormButton = styled.button`
-  margin-top: 15px;
-`;
 
 export const Login = () => {
   const login = useActionData();
@@ -64,41 +10,38 @@ export const Login = () => {
   useEffect(() => {
     if (login) {
       setValue(true);
-      navigate('/profile');
+      navigate('../home');
     }
   }, [login]);
 
   return (
-    <Container>
-      <Navigation>
-        <Link to={'/'}>Home</Link>
-        <Menu>
-          <Link to={'../register'}>Register</Link>
-          <LoginLink to={'.'} $isActive>
-            Login
-          </LoginLink>
-        </Menu>
-      </Navigation>
-      <Header>
-        <h2>Login!</h2>
-      </Header>
-      <Main>
-        <LoginForm method="post">
-          <FormController>
+    <div>
+      <nav>
+        <Link to={'/'}>Main</Link>
+        <Link to={'../register'}>Register</Link>
+        <Link to={'.'}>Login</Link>
+      </nav>
+      <header>
+        <h2>Login</h2>
+        <p>Enter your username and password to login the app</p>
+      </header>
+      <main>
+        <Form method="post">
+          <div>
             <label htmlFor="username">Username</label>
             <input name="username" placeholder="Your name" />
-          </FormController>
-          <FormController>
+          </div>
+          <div>
             <label htmlFor="password">Password</label>
             <input
               type="password"
               name="password"
               placeholder="Your password"
             />
-          </FormController>
-          <FormButton type="submit">Login</FormButton>
-        </LoginForm>
-      </Main>
-    </Container>
+          </div>
+          <button type="submit">Login</button>
+        </Form>
+      </main>
+    </div>
   );
 };

@@ -11,9 +11,9 @@ const postLoginData = async (formData: FormData) => {
       mode: 'cors',
       body: formData,
     });
-    const {success}: any = await response.json();
+    const {login}: any = await response.json();
 
-    return success;
+    return login;
   } catch (error) {
     return error;
   }
