@@ -157,6 +157,17 @@ def dish_add():
     return jsonify(status=True)
 
 
+@app.route("/api/home/dish/<string:id>")
+def dish(id):
+    # Check if session is valid
+    if "id" not in session:
+        return redirect(url_for("logout"))
+    
+    query = dict(userid=session["id"], dishid=id)
+    dish_data = get_dish(query)
+    return jsonify(dish_data)
+
+
 # Create a route to edit dishes
 @app.route("/api/profile/dishes/update", methods=["GET", "POST"])
 def dish_update():

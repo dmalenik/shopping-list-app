@@ -21,17 +21,13 @@ def get_dishes_list(user):
     return [dict(res[i]) for i in range(len(res))] if res else None
 
 # Get dish data
-def get_dish_data(query_data):
-    with psycopg2.connect(db) as conn:
-        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
-            curs.execute(f"SELECT * FROM {db_table} WHERE userid = %s AND id = %s;", (query_data["userid"], query_data["dishid"]))
+def get_dish(query):
+    with connect(db) as conn:
+        with conn.cursor(cursor_factory=DictCursor) as curs:
+            curs.execute(f"SELECT * FROM {db_table} WHERE userid = %s AND id = %s;", (query["userid"], query["dishid"]))
             res = curs.fetchone()
 
-            res = dict(res)
-            for i in range(len(res["components"])):
-                res["components"][i] = json.loads(res["components"][i])
-    
-    return res if res else None
+    return dict(res) if res else None
 
 
 # Add dish data to DB
