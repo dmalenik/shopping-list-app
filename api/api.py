@@ -93,28 +93,29 @@ def home():
     return jsonify(user=user, dishes=dishes)
 
 
+# Implement routes related to user
 # Update user data
-@app.route("/api/profile/update", methods=["GET", "POST"])
-def profile_update():
+# Delete user data
+@app.route("/api/user/update", methods=["GET", "POST"])
+def user_update():
     # Check if session is valid
     if "id" not in session:
         return redirect(url_for("logout"))
 
     if request.method == "POST":
-        # Dmytro Malienik, not Dmytro
         query = dict(id=session["id"], action=request.form["action"])
 
         # # Update user data
         if query["action"] == "edit":
-            edit_user = dict(request.form)
+            user = dict(request.form)
 
-            if update_credentials_valid(edit_user):
-                edit_user_data(query, edit_user)
+            if update_credentials_valid(user):
+                update_user(query, user)
                 return jsonify(success=True)
         
         # # Delete user data
         if query["action"] == "delete":
-            delete_user_data(query)
+            delete_user(query)
             return redirect(url_for("logout"))
 
 

@@ -41,9 +41,12 @@ def register_credentials_valid(credentials):
 
 # Update function
 def update_credentials_valid(credentials):
-    with psycopg2.connect(db) as conn:
-        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
-            return True if credentials["username"] else False
+    with connect(db) as conn:
+        with conn.cursor(cursor_factory=DictCursor) as curs:
+            curs.execute(f"SELECT username FROM {db_table} WHERE username = %s;", (credentials["current"],))
+            res = curs.fetchone()
+
+    return True if res else False
 
 
 # Implement helper functions for dish data handling
