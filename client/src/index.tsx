@@ -4,6 +4,7 @@ import reportWebVitals from './reportWebVitals';
 import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 
 import {App} from './routes/app';
+import {MainPage} from './routes/main';
 import {StyledLogin, LoginError, loginAction} from './routes/login';
 import {RequireAuth} from './routes/require-auth';
 import {StyledHome, homeLoader, homeAction} from './routes/home';

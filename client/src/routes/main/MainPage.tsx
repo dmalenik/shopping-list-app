@@ -1,29 +1,18 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
-import {styled} from 'styled-components';
-
-const Container = styled.div`
-  margin: 3% 25%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
+import {navigationData} from '../../shared/data';
+import {mainPageData} from './sectionData';
+import {StyledNavigation} from '../../shared/components';
+import {StyledSection} from './Section';
 
 export const MainPage = () => {
   return (
-    <Container>
-      <nav>
-        <Link to={'register'}>Register</Link>
-        <Link to={'login'}>Login</Link>
-      </nav>
+    <div>
+      <StyledNavigation menu={navigationData} active="/" className="nav" />
       <main>
-        <section>
-          <h2>Recipes</h2>
-        </section>
-        <section>
-          <h2>Shopping list</h2>
-        </section>
+        {mainPageData.map(s => (
+          <StyledSection data={s} key={s.id} className="card" />
+        ))}
       </main>
-    </Container>
+    </div>
   );
 };
