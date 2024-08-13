@@ -249,7 +249,6 @@ def item_update():
 
         # Update existing shopping list
         if request.form["action"] == "update":
-            print("list updates", request.form)
             name, quantity, unit, id, action = request.form.items(multi=True)
             # Create list object to change
             query = dict(id=id[1], userid=session["id"])
