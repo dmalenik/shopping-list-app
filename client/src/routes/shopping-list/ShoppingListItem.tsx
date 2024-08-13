@@ -1,12 +1,14 @@
 import React, {useEffect, useState} from 'react';
+import {styled} from 'styled-components';
 
-export const ShoppingListItem = ({data, edit}) => {
+const ShoppingListItem = ({data, edit, className}) => {
   const [item, setItem] = useState(data);
 
   useEffect(
     () =>
       edit.setter([
         ...edit.list.toSpliced(
+          edit.list.findIndex(
             (el: {
               id: number;
               name: string;
@@ -15,6 +17,7 @@ export const ShoppingListItem = ({data, edit}) => {
               userid: number;
               clicked: boolean;
             }) => el.id === item.id
+          ),
           1,
           item
         ),
@@ -23,7 +26,7 @@ export const ShoppingListItem = ({data, edit}) => {
   );
 
   return (
-    <div>
+    <div className={className}>
       <p>{`${item?.quantity} ${item?.unit} ${item?.name}`}</p>
       <button
         type="button"
@@ -34,3 +37,19 @@ export const ShoppingListItem = ({data, edit}) => {
     </div>
   );
 };
+
+export const StyledShoppingListItem = styled(ShoppingListItem)`
+  display: flex;
+  column-gap: 15px;
+  align-items: center;
+  justify-content: flex-start;
+
+  button {
+    height: 32px;
+    border-radius: 12px;
+    background-color: #151924;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 17px;
+  }
+`;

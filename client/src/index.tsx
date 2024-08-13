@@ -18,7 +18,7 @@ import {
 } from './routes/food-card';
 import {
   handleShoppingListItemAction,
-  ShoppingList,
+  StyledShoppingList,
   shoppingListLoader,
 } from './routes/shopping-list';
 
@@ -64,8 +64,8 @@ const router = createBrowserRouter([
             action: updateDishAction,
           },
           {
-            path: 'home/list',
-            element: <ShoppingList />,
+            path: 'list',
+            element: <StyledShoppingList className="shopping-list" />,
             loader: shoppingListLoader,
             action: handleShoppingListItemAction,
             id: 'list',
