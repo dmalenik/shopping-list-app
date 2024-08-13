@@ -18,6 +18,7 @@ const ShoppingList = ({className}) => {
     }[]
   >();
   const [newItem, setNewItem] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [storedValue, setValue] = useLoginState();
 
   // logout when session timeout

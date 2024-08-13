@@ -11,6 +11,7 @@ type Data<T> = T extends {logout: boolean}
       userid: number;
     };
   const dish = useLoaderData() as Data<typeof dish>;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [storedValue, setValue] = useLoginState();
   const [update, setUpdate] = useState<typeof dish | undefined>(false);
 

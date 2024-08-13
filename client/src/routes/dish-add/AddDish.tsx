@@ -5,7 +5,7 @@ import {useLoginState} from '../../hooks';
   const logout = useLoaderData() as {logout: boolean};
   const [keys, setKeys] = useState([crypto.randomUUID()]);
   const actionData = useActionData() as boolean;
-  const status = useLoaderData();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [storedValue, setValue] = useLoginState();
 
   // // logout when session timeout

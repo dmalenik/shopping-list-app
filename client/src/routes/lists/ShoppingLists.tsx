@@ -4,6 +4,7 @@ import {useLoginState} from '../../hooks';
 
 export const ShoppingLists = () => {
   const lists: unknown = useLoaderData();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [storedValue, setValue] = useLoginState();
 
   useEffect(() => lists?.success && setValue(false), [lists]);

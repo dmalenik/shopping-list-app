@@ -15,6 +15,7 @@ type Data<T> = T extends {logout: boolean}
       user: {id: number; email: string; username: string};
     };
   const data = useLoaderData() as Data<typeof data>;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [storedValue, setValue] = useLoginState();
   const [update, setUpdate] = useState(false);
 

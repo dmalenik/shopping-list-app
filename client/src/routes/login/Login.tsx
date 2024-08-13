@@ -5,6 +5,7 @@ import {useLoginState} from '../../hooks';
 export const Login = () => {
   const login = useActionData() as {login: boolean};
   const navigate = useNavigate();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [storedValue, setValue] = useLoginState();
 
   useEffect(() => {
