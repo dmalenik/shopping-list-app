@@ -7,6 +7,7 @@ import {App} from './routes/app';
 import {Register, registerAction} from './routes/register';
 import {Login, LoginError, loginAction} from './routes/login';
 import {RequireAuth} from './routes/require-auth';
+import {StyledHome, homeLoader, homeAction} from './routes/home';
 import {StyledAddDish, addDishAction} from './routes/dish-add';
 import {Logout, logoutLoader} from './routes/logout';
 import {
@@ -45,7 +46,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: 'home',
-            element: <Home />,
+            element: <StyledHome className="home" />,
             loader: homeLoader,
             action: homeAction,
           },

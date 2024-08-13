@@ -1,3 +1,3 @@
-export {Home} from './Home';
+export {StyledHome} from './Home';
 export {homeLoader} from './homeLoader';
 export {homeAction} from './homeAction';

@@ -1,6 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {useLoaderData, Link} from 'react-router-dom';
+import {useLoaderData} from 'react-router-dom';
 import {useLoginState} from '../../hooks';
+import {StyledProfileNavigation} from './ProfileNavigation';
+import {profileNavigationData} from './profileNavigationData';
+import {StyledUser} from './User';
+import {StyledUpdateUser} from './UpdateUserProfile';
+import {StyledDishList} from './DishList';
+import {styled} from 'styled-components';
+
 type Data<T> = T extends {logout: boolean}
   ? {logout: boolean}
   : {
@@ -14,47 +21,56 @@ type Data<T> = T extends {logout: boolean}
       }[];
       user: {id: number; email: string; username: string};
     };
+
+const Home = ({className}) => {
   const data = useLoaderData() as Data<typeof data>;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [storedValue, setValue] = useLoginState();
   const [update, setUpdate] = useState(false);
 
-  // // logout when session timeout
-  useEffect(() => data?.logout && setValue(false), [data]);
+  // logout when session timeout
+  useEffect(() => data.logout && setValue(false), [data]);
 
   return (
-    <div>
-      <nav>
-        <Link to={'.'}>Home</Link>
-        <Link to={'dish/add'}>Add dish</Link>
-        <Link to={'list'}>Shopping list</Link>
-        <Link to={'../logout'}>Logout</Link>
-      </nav>
+    <div className={className}>
+      <StyledProfileNavigation
+        className="profile-nav"
+        menu={profileNavigationData}
+      />
       <main>
         {update ? (
-          <UpdateUser
-            data={data?.user ?? null}
+          <StyledUpdateUser
+            data={data.user ?? null}
             update={() => setUpdate(!update)}
+            className="user-edit"
           />
         ) : (
-          <User
+          <StyledUser
             data={data?.user ?? null}
-            stats={{dishes: data?.dishes?.length, items: 41}}
+            stats={{
+              dishes: data.dishes?.length,
+              items: data.items?.length,
+            }}
             update={() => setUpdate(!update)}
+            className="profile"
           />
         )}
-        <section>
-          <h3>What do you want to cook today?</h3>
-          <div>
-            {data?.dishes?.map(({id, name, logo}) => (
-              <div key={id}>
-                <img src={logo} alt="logo" />
-                <Link to={`./dish/${id}`}>{name}</Link>
-              </div>
-            )) ?? <p>Empty list</p>}
-          </div>
-        </section>
+        <StyledDishList data={data} className="dish-list" />
       </main>
     </div>
   );
 };
+
+export const StyledHome = styled(Home)`
+  display: flex;
+  flex-direction: column;
+
+  main {
+    align-self: center;
+    text-align: center;
+    padding: 3%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 35px;
+  }
+`;
