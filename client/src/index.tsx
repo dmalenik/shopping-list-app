@@ -9,7 +9,11 @@ import {Login, LoginError, loginAction} from './routes/login';
 import {RequireAuth} from './routes/require-auth';
 import {StyledAddDish, addDishAction} from './routes/dish-add';
 import {Logout, logoutLoader} from './routes/logout';
-import {FoodCard, foodCardLoader, updateDishAction} from './routes/food-card';
+import {
+  StyledFoodCard,
+  foodCardLoader,
+  updateDishAction,
+} from './routes/food-card';
 import {
   handleShoppingListItemAction,
   ShoppingList,
