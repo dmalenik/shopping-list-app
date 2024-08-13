@@ -56,7 +56,7 @@ def update_credentials_valid(credentials):
 def dish_available(dish):
     with connect(db) as conn:
         with conn.cursor(cursor_factory=DictCursor) as curs:
-            curs.execute(f"SELECT name FROM dishes WHERE userid = %s;", (dish["userid"],))
+            curs.execute(f"SELECT name FROM dishes WHERE name = %s;", (dish["name"],))
             res = curs.fetchone()
 
     return bool(res)
