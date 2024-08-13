@@ -4,8 +4,7 @@ import reportWebVitals from './reportWebVitals';
 import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 
 import {App} from './routes/app';
-import {Register, registerAction} from './routes/register';
-import {Login, LoginError, loginAction} from './routes/login';
+import {StyledLogin, LoginError, loginAction} from './routes/login';
 import {RequireAuth} from './routes/require-auth';
 import {StyledHome, homeLoader, homeAction} from './routes/home';
 import {StyledAddDish, addDishAction} from './routes/dish-add';
@@ -37,7 +36,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'login',
-        element: <Login />,
+        element: <StyledLogin className="login" />,
         errorElement: <LoginError />,
         action: loginAction,
       },
