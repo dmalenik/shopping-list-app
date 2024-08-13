@@ -5,6 +5,7 @@ import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 
 import {App} from './routes/app';
 import {MainPage} from './routes/main';
+import {StyledRegister, registerAction} from './routes/register';
 import {StyledLogin, LoginError, loginAction} from './routes/login';
 import {RequireAuth} from './routes/require-auth';
 import {StyledHome, homeLoader, homeAction} from './routes/home';
@@ -32,7 +33,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'register',
-        element: <Register />,
+        element: <StyledRegister className="register" />,
         action: registerAction,
       },
       {
