@@ -8,8 +8,6 @@ export const RequireAuth = () => {
   return storedValue === false ? (
     <Navigate to={'../login'} replace={true} />
   ) : (
-    <div>
-      <Outlet context={[storedValue, setValue]} />
-    </div>
+    <Outlet context={[storedValue, setValue]} />
   );
 };
