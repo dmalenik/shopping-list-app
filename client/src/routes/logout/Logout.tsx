@@ -7,7 +7,11 @@ export const Logout = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [storedValue, setValue] = useLoginState();
 
-  useEffect(() => logout?.success && setValue(false), [logout]);
+  useEffect(() => {
+    if (logout?.logout) {
+      setValue(false);
+    }
+  }, [logout]);
 
   return <Navigate to={'../login'} replace={true} />;
 };
