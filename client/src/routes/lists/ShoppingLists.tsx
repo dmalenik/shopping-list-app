@@ -2,6 +2,8 @@ import React, {useEffect} from 'react';
 import {Outlet, useLoaderData, Link} from 'react-router-dom';
 import {useLoginState} from '../../hooks';
 
+// delete route?
+
 export const ShoppingLists = () => {
   const lists: unknown = useLoaderData();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
