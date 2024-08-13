@@ -1,2 +1,2 @@
 export {registerAction} from './registerAction';
-export {Register} from './Register';
+export {StyledRegister} from './Register';

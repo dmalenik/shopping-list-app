@@ -2,10 +2,12 @@
   "extends": "./node_modules/gts/tsconfig-google.json",
   "compilerOptions": {
     "rootDir": ".",
-    "outDir": "build"
+    "outDir": "build",
+    "jsx": "react",
+    "esModuleInterop": true,
   },
   "include": [
     "src/**/*.ts",
-    "test/**/*.ts"
-, "src/routes/login/loginAction.ts"  ]
+    "test/**/*.ts", 
+    "src/routes/login/loginAction.ts", "src/shared/data/index.tsx", "src/shared/types/index.tsx", "src/shared/types/appTypes.tsx" ],
 }

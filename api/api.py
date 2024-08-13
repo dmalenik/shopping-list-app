@@ -8,10 +8,10 @@ from werkzeug.datastructures import ImmutableOrderedMultiDict
 
 sys.path.append(os.path.abspath("./db"))
 
-from users import register_user, edit_user_data, delete_user_data, get_user_data, get_user_session_data
-from helpers import login_credentials_valid, register_credentials_valid, dish_exists, list_exists, update_credentials_valid
-from dishes import get_dishes_list, add_dish, edit_dish, delete_dish
-from lists import get_shopping_lists, create_list, edit_list, delete_list
+from users import register_user, update_user, delete_user, get_user, get_user_session_data
+from helpers import login_credentials_valid, register_credentials_valid, dish_available, item_exists, update_credentials_valid
+from dishes import get_dishes_list, get_dish, add_dish, update_dish, delete_dish
+from items import get_shopping_list, add_item, update_item, delete_item
 
 
 app = Flask(__name__)
@@ -64,12 +64,10 @@ def login():
         if login_credentials_valid(credentials):
             # Set session for available user
             user = get_user_session_data(credentials)
-
             session["id"] = user["id"]
-
-            return jsonify(success=True)
+            return jsonify(login=True)
         
-    return jsonify(success=False)
+    return jsonify(login=False)
 
 
 # Logout user
@@ -77,64 +75,53 @@ def login():
 def logout():
     session.clear()
     
-    return jsonify(success=True)
+    return jsonify(logout=True)
 
 
-# Implement routes related to user
-# Display user profile
-@app.route("/api/profile")
-def profile():
+# Display home page 
+@app.route("/api/home")
+def home():
     # Check if session is valid
     if "id" not in session:
         return redirect(url_for("logout"))
     
     # Session name cannot be found because username was changed
     credentials = dict(id=session["id"])
-    user = get_user_data(credentials)
-    return jsonify(user)
+    user = get_user(credentials)
+    dishes = get_dishes_list(credentials)
+    items = get_shopping_list(credentials)
+    return jsonify(user=user, dishes=dishes, items=items)
 
 
+# Implement routes related to user
 # Update user data
-@app.route("/api/profile/update", methods=["GET", "POST"])
-def profile_update():
+# Delete user data
+@app.route("/api/user/update", methods=["GET", "POST"])
+def user_update():
     # Check if session is valid
     if "id" not in session:
         return redirect(url_for("logout"))
 
     if request.method == "POST":
-        # Dmytro Malienik, not Dmytro
         query = dict(id=session["id"], action=request.form["action"])
 
         # # Update user data
         if query["action"] == "edit":
-            edit_user = dict(request.form)
+            user = dict(request.form)
 
-            if update_credentials_valid(edit_user):
-                edit_user_data(query, edit_user)
+            if update_credentials_valid(user):
+                update_user(query, user)
                 return jsonify(success=True)
         
         # # Delete user data
         if query["action"] == "delete":
-            delete_user_data(query)
+            delete_user(query)
             return redirect(url_for("logout"))
 
 
 # Implement routes related to dishes
-# Create a route to see dishes
-@app.route("/api/profile/dishes")
-def dishes():
-    # Check if session is valid
-    if "id" not in session:
-        return redirect(url_for("logout"))
-
-    # Get dishes list for current user
-    user = dict(userid=session["id"])
-    dishes_list = get_dishes_list(user)
-    return jsonify(dishes_list)
-
-
 # Create a route to add new dish
-@app.route("/api/profile/dishes/add", methods=["GET", "POST"])
+@app.route("/api/home/dish/add", methods=["GET", "POST"])
 def dish_add():
     # Check if session is valid
     if "id" not in session:
@@ -142,25 +129,42 @@ def dish_add():
     
     if request.method == "POST":
         # Create dish object to add
-        name, *components = request.form.items(multi=True)
+        dishname, *ingridients = request.form.items(multi=True)
+        dish = dict(name=dishname[1], ingridients=list(), logo=None, userid=session["id"])
 
-        dish = dict(dish=name[1], components=list(), id=None, user=session["id"])
-
-        for i in range(0, len(components), 4):
-            component = dict()
+        for i in range(0, len(ingridients), 4):
+            ingridient = dict()
 
             for k in range(i, i+4):
-                component[components[k][0]] = components[k][1]
+                ingridient[ingridients[k][0]] = ingridients[k][1]
             
-            dish["components"].append(component)
+            dish["ingridients"].append(ingridient)
+
+        # Handle image file
+        if "logo" in request.files:
+            logo = request.files["logo"]
+            path = os.path.join(app.config["UPLOAD_FOLDER"], logo.filename)
+            logo.save(path)
+            dish["logo"] = path
 
         # Check if dish with the same name exists
-        if dish_exists(dish):
+        if dish_available(dish):
             return jsonify(success=False)
-        
-        # Was error due to similar with dish_add function names
+
         add_dish(dish)
-        return jsonify(success=True)
+        
+    return jsonify(success=True)
+
+
+@app.route("/api/home/dish/<string:id>")
+def dish(id):
+    # Check if session is valid
+    if "id" not in session:
+        return redirect(url_for("logout"))
+    
+    query = dict(userid=session["id"], dishid=id)
+    dish_data = get_dish(query)
+    return jsonify(dish_data)
 
 
 # Create a route to edit dishes
@@ -172,79 +176,71 @@ def dish_update():
     
     if request.method == "POST":
         if request.form["action"] == "edit":
-            dishname, *components, dishid, action = request.form.items(multi=True)
+            dishname, *ingridients, dishid, action = request.form.items(multi=True)
             # Create dish object to change
-            dish = dict(id=dishid[1])
+            dish = dict(id=dishid[1], userid=session["id"], name=dishname[1])
 
             # Create object with dish updates
-            dish_update = dict(name=dishname[1], list=list())
+            updates = dict(name=dishname[1], ingridients=list())
 
-            for i in range(0, len(components), 4):
-                component = dict()
+            for i in range(0, len(ingridients), 4):
+                ingridient = dict()
 
                 for k in range(i, i+4):
-                    component[components[k][0]] = components[k][1]
+                    ingridient[ingridients[k][0]] = ingridients[k][1]
                 
-                dish_update["list"].append(component)
+                updates["ingridients"].append(ingridient)
             
             # Add dish updates to db    
-            if dish_exists(dish):
-                edit_dish(dish, dish_update)
+            if dish_available(dish):
+                update_dish(dish, updates)
                 return jsonify(success=True)
 
         if request.form["action"] == "delete":
             id, action = request.form.items(multi=True)
             # Create dish object to change
-            dish = dict(id=id[1], user=session["id"])
+            dish = dict(id=id[1], userid=session["id"])
 
             # Delete dish data
-            if dish_exists(dish):
+            if dish_available(dish):
                 delete_dish(dish)
-                return jsonify(success=True)
+                return jsonify(delete=True)
             
-        return jsonify(success=False)
+    return jsonify(success=False)
 
 
 # Implement routes related to shopping lists
 # Get current shopping lists related to a user
-@app.route("/api/profile/lists")
-def lists():
+@app.route("/api/home/list")
+def shopping_list():
     # Check if session is valid
     if "id" not in session:
         return redirect(url_for("logout"))
 
     user = dict(id=session["id"])
     # Get shopping lists for current user
-    shopping_lists = get_shopping_lists(user)
-    return jsonify(shopping_lists)
+    sh_list = get_shopping_list(user)
+    return jsonify(sh_list)
 
 
-# Create new shopping list
-@app.route("/api/profile/lists/create", methods=["GET", "POST"])
-def list_create():
+# Add new item to shopping list
+@app.route("/api/home/item/add", methods=["GET", "POST"])
+def item_add():
     # Check if session is valid
     if "id" not in session:
         return redirect(url_for("logout"))
     
     if request.method == "POST":
-        title, *items = request.form.items(multi=True)
-        # Create list object
-        list = dict(name=title[1], elements=[], userid=session["id"])
-
-        for i in range(0, len(items), 4):
-            element = dict()
-
-            for k in range(i, i+4):
-                element[items[k][0]] = items[k][1]
-            
-            list["elements"].append(element)
+        name, quantity, unit = request.form.items(multi=True)
+        # Create item object
+        item = dict(name=name[1], quantity=quantity[1], unit=unit[1], userid=session["id"])
         
-        create_list(list)
+        add_item(item)
         return jsonify(success=True)
 
 
-@app.route("/api/profile/lists/update", methods=["GET", "POST"])
-def list_update():
+@app.route("/api/home/item/update", methods=["GET", "POST"])
+def item_update():
     # Check if session is valid
     if "id" not in session:
         return redirect(url_for("logout"))
@@ -252,37 +248,28 @@ def list_update():
     if request.method == "POST":
 
         # Update existing shopping list
-        if request.form["action"] == "edit":
-            name, *elements, id, action = request.form.items(multi=True)
+        if request.form["action"] == "update":
+            name, quantity, unit, id, action = request.form.items(multi=True)
             # Create list object to change
-            query_list = dict(id=id[1])
-
+            query = dict(id=id[1], userid=session["id"])
             # Create object with list updates
-            list_edit = dict(name=name[1], elements=list())
-
-            for i in range(0, len(elements), 4):
-                element = dict()
-
-                for k in range(i, i+4):
-                    element[elements[k][0]] = elements[k][1]
-                
-                list_edit["elements"].append(element)
+            updates = dict(name=name[1], quantity=quantity[1], unit=unit[1])
             
-            if list_exists(query_list):
+            if item_exists(query):
                 # Add list updates to db
                 # Fix - update only certain columns in db
-                edit_list(query_list, list_edit)
+                update_item(query, updates)
                 return jsonify(success=True)
 
         # Delete existing shopping list 
         if request.form["action"] == "delete":
             id, action = request.form.items(multi=True)
             # Create list object to change
-            query_list = dict(id=id[1])
+            query = dict(id=id[1], userid=session["id"])
 
-            if list_exists(query_list):
+            if item_exists(query):
                 # Delete list data
-                delete_list(query_list)
+                delete_item(query)
                 return jsonify(success=True)
             
         return jsonify(success=False)

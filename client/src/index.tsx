@@ -2,25 +2,26 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
 import {createBrowserRouter, RouterProvider} from 'react-router-dom';
+import './index.css';
 
 import {App} from './routes/app';
-import {Register, registerAction} from './routes/register';
-import {Login, LoginError, loginAction} from './routes/login';
+import {MainPage} from './routes/main';
+import {StyledRegister, registerAction} from './routes/register';
+import {StyledLogin, LoginError, loginAction} from './routes/login';
 import {RequireAuth} from './routes/require-auth';
-import {UserProfile, userProfileLoader} from './routes/profile';
+import {StyledHome, homeLoader, homeAction} from './routes/home';
+import {StyledAddDish, addDishAction} from './routes/dish-add';
+import {Logout, logoutLoader} from './routes/logout';
 import {
-  UpdateUserProfile,
-  updateUserProfileAction,
-} from './routes/profile-update';
-import {Dishes, dishesLoader} from './routes/dishes';
-import {addDishAction, AddDish} from './routes/dishes-add';
-import {UpdateDish, updateDishAction} from './routes/dishes-update';
-import {ShoppingLists, shoppingListsLoader} from './routes/lists';
-import {AddShoppingList, addShoppingListAction} from './routes/lists-add';
+  StyledFoodCard,
+  foodCardLoader,
+  updateDishAction,
+} from './routes/food-card';
 import {
-  UpdateShoppingList,
-  updateShoppingListAction,
-} from './routes/lists-update';
+  handleShoppingListItemAction,
+  StyledShoppingList,
+  shoppingListLoader,
+} from './routes/shopping-list';
 
 const router = createBrowserRouter([
   {
@@ -28,18 +29,17 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: 'home',
-        element: <div>Home is where you are!</div>,
+        element: <MainPage />,
         index: true,
       },
       {
         path: 'register',
-        element: <Register />,
+        element: <StyledRegister className="register" />,
         action: registerAction,
       },
       {
         path: 'login',
-        element: <Login />,
+        element: <StyledLogin className="login" />,
         errorElement: <LoginError />,
         action: loginAction,
       },
@@ -47,50 +47,34 @@ const router = createBrowserRouter([
         element: <RequireAuth />,
         children: [
           {
-            path: 'profile',
-            element: <UserProfile />,
-            loader: userProfileLoader,
-            children: [
-              {
-                path: 'update',
-                element: <UpdateUserProfile />,
-                action: updateUserProfileAction,
-              },
-              {
-                path: 'dishes',
-                element: <Dishes />,
-                loader: dishesLoader,
-                children: [
-                  {
-                    path: 'add',
-                    element: <AddDish />,
-                    action: addDishAction,
-                  },
-                  {
-                    path: 'update',
-                    element: <UpdateDish />,
-                    action: updateDishAction,
-                  },
-                ],
-              },
-              {
-                path: 'lists',
-                element: <ShoppingLists />,
-                loader: shoppingListsLoader,
-                children: [
-                  {
-                    path: 'add',
-                    element: <AddShoppingList />,
-                    action: addShoppingListAction,
-                  },
-                  {
-                    path: 'update',
-                    element: <UpdateShoppingList />,
-                    action: updateShoppingListAction,
-                  },
-                ],
-              },
-            ],
+            path: 'home',
+            element: <StyledHome className="home" />,
+            loader: homeLoader,
+            action: homeAction,
+          },
+          {
+            path: 'dish/add',
+            element: <StyledAddDish className="dish-add" />,
+            action: addDishAction,
+            loader: async () => await fetch('/api/home/dish/add'),
+          },
+          {
+            path: 'dish/:id',
+            element: <StyledFoodCard className="food-cards" />,
+            loader: foodCardLoader,
+            action: updateDishAction,
+          },
+          {
+            path: 'list',
+            element: <StyledShoppingList className="shopping-list" />,
+            loader: shoppingListLoader,
+            action: handleShoppingListItemAction,
+            id: 'list',
+          },
+          {
+            path: 'logout',
+            element: <Logout />,
+            loader: logoutLoader,
           },
         ],
       },

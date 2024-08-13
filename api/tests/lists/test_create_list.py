@@ -2,7 +2,7 @@ import os
 import sys
 
 sys.path.append(os.path.abspath("/shopping-list-app/flaskr/db"))
-from lists import create_list
+from items import create_list
 
 # Testing data
 list = {
