@@ -152,9 +152,8 @@ def dish_add():
             return jsonify(success=False)
 
         add_dish(dish)
-        return jsonify(success=True)
-    
-    return jsonify(status=True)
+        
+    return jsonify(success=True)
 
 
 @app.route("/api/home/dish/<string:id>")
