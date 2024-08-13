@@ -1,15 +1,22 @@
 import React, {useState, useEffect} from 'react';
 import {Link, useLoaderData} from 'react-router-dom';
 import {useLoginState} from '../../hooks';
-import {UpdateShoppingListItem} from './UpdateShoppingListItem';
-import {ShoppingListItem} from './ShoppingListItem';
-import {AddShoppingListItem} from './AddShoppingListItem';
+type Data<T> = T extends {logout: boolean}
+  ? {logout: boolean}
+  : {id: number; userid: number}[];
 
-export const ShoppingList = () => {
-  const data = useLoaderData();
-  const [shoppingList, setShoppingList] = useState(
-    data => !data?.logout && data?.map(item => ({clicked: false, ...item}))
-  );
+const ShoppingList = ({className}) => {
+  const data = useLoaderData() as Data<typeof data>;
+  const [shoppingList, setShoppingList] = useState<
+    {
+      id: number;
+      name: string;
+      quantity: string;
+      unit: string;
+      userid: number;
+      clicked: boolean;
+    }[]
+  >();
   const [newItem, setNewItem] = useState(false);
   const [storedValue, setValue] = useLoginState();
 

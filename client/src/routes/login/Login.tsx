@@ -3,7 +3,7 @@ import {useActionData, useNavigate, Form, Link} from 'react-router-dom';
 import {useLoginState} from '../../hooks';
 
 export const Login = () => {
-  const login = useActionData();
+  const login = useActionData() as {login: boolean};
   const navigate = useNavigate();
   const [storedValue, setValue] = useLoginState();
 

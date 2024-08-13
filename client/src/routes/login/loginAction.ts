@@ -1,4 +1,4 @@
-export const loginAction = async ({request}: any) => {
+export const loginAction = async ({request}: {request: Request}) => {
   const formData = await request.formData();
 
   return postLoginData(formData);
@@ -11,7 +11,7 @@ const postLoginData = async (formData: FormData) => {
       mode: 'cors',
       body: formData,
     });
-    const {login}: any = await response.json();
+    const login = (await response.json()) as {login: boolean};
 
     return login;
   } catch (error) {

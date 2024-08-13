@@ -3,7 +3,7 @@ import {Navigate, useLoaderData} from 'react-router-dom';
 import {useLoginState} from '../../hooks';
 
 export const Logout = () => {
-  const logout = useLoaderData();
+  const logout = useLoaderData() as {logout: boolean};
   const [storedValue, setValue] = useLoginState();
 
   useEffect(() => logout?.success && setValue(false), [logout]);

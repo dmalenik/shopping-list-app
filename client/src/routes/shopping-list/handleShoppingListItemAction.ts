@@ -1,6 +1,10 @@
 import {redirect} from 'react-router-dom';
 
-export const handleShoppingListItemAction = async ({request}: any) => {
+export const handleShoppingListItemAction = async ({
+  request,
+}: {
+  request: Request;
+}) => {
   const formData = await request.formData();
   // eslint-disable-next-line n/no-unsupported-features/es-builtins
   const formEntries = Object.fromEntries(formData);
@@ -19,7 +23,7 @@ const postShoppingListItemData = async (formData: FormData) => {
       mode: 'cors',
       body: formData,
     });
-    const finalResponse: any = await response.json();
+    const finalResponse = (await response.json()) as {success: boolean};
 
     return finalResponse;
   } catch (error) {
@@ -34,7 +38,7 @@ const postShoppingListUpdateData = async (formData: FormData) => {
       mode: 'cors',
       body: formData,
     });
-    const {success}: any = await response.json();
+    const {success} = (await response.json()) as {success: boolean};
 
     return (
       ((success && formData.get('action') === 'update') ||

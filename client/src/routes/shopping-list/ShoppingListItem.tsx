@@ -7,7 +7,14 @@ export const ShoppingListItem = ({data, edit}) => {
     () =>
       edit.setter([
         ...edit.list.toSpliced(
-          edit.list.findIndex(el => el.id === item.id),
+            (el: {
+              id: number;
+              name: string;
+              quantity: string;
+              unit: string;
+              userid: number;
+              clicked: boolean;
+            }) => el.id === item.id
           1,
           item
         ),

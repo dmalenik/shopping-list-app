@@ -1,11 +1,20 @@
 import React, {useEffect, useState} from 'react';
 import {useLoaderData, Link} from 'react-router-dom';
 import {useLoginState} from '../../hooks';
-import {User} from './User';
-import {UpdateUser} from './UpdateUserProfile';
-
-export const Home = () => {
-  const data: unknown = useLoaderData();
+type Data<T> = T extends {logout: boolean}
+  ? {logout: boolean}
+  : {
+      dishes: {id: number; logo?: string; name: string}[];
+      items: {
+        id: number;
+        name: string;
+        quantity: string;
+        unit: string;
+        userid: number;
+      }[];
+      user: {id: number; email: string; username: string};
+    };
+  const data = useLoaderData() as Data<typeof data>;
   const [storedValue, setValue] = useLoginState();
   const [update, setUpdate] = useState(false);
 

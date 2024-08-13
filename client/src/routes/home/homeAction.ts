@@ -1,6 +1,6 @@
 import {redirect} from 'react-router-dom';
 
-export const homeAction = async ({request}: any) => {
+export const homeAction = async ({request}: {request: Request}) => {
   const formData = await request.formData();
 
   return postUpdateUserData(formData);
@@ -13,9 +13,9 @@ const postUpdateUserData = async (formData: FormData) => {
       mode: 'cors',
       body: formData,
     });
-    const finalResponse: any = await response.json();
+    const finalResponse = (await response.json()) as {logout: boolean};
 
-    return finalResponse?.logout ? redirect('../login') : finalResponse;
+    return finalResponse.logout ? redirect('../login') : finalResponse;
   } catch (error) {
     return error;
   }

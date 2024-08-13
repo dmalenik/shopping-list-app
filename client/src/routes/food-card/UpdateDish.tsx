@@ -41,7 +41,12 @@ export const UpdateDish = ({update, data}) => {
                   setUpdates({
                     ...updates,
                     ingridients: updates.ingridients.filter(
-                      (ing: unknown) => ing.id !== id
+                        (ing: {
+                          id: string;
+                          name: string;
+                          quantity: string;
+                          unit: string;
+                        }) => ing.id !== id
                     ),
                   })
                 }

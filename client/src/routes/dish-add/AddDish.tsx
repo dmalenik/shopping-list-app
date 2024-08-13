@@ -2,9 +2,9 @@ import React, {useState, useEffect} from 'react';
 import {Form, useActionData, Link, useLoaderData} from 'react-router-dom';
 import {useLoginState} from '../../hooks';
 
-export const AddDish = () => {
+  const logout = useLoaderData() as {logout: boolean};
   const [keys, setKeys] = useState([crypto.randomUUID()]);
-  const actionData = useActionData();
+  const actionData = useActionData() as boolean;
   const status = useLoaderData();
   const [storedValue, setValue] = useLoginState();
 

@@ -1,6 +1,6 @@
 import {redirect} from 'react-router-dom';
 
-export const addDishAction = async ({request}: any) => {
+export const addDishAction = async ({request}: {request: Request}) => {
   const formData = await request.formData();
 
   return postDishData(formData);
@@ -13,9 +13,9 @@ const postDishData = async (formData: FormData) => {
       mode: 'cors',
       body: formData,
     });
-    const {success}: any = await response.json();
+    const finalResponse = (await response.json()) as {success: boolean};
 
-    return (success && redirect('../home')) || null;
+    return finalResponse.success ? redirect('../home') : finalResponse.success;
   } catch (error) {
     return error;
   }
