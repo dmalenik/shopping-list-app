@@ -89,7 +89,8 @@ def home():
     credentials = dict(id=session["id"])
     user = get_user(credentials)
     dishes = get_dishes_list(credentials)
-    return jsonify(user=user, dishes=dishes)
+    items = get_shopping_list(credentials)
+    return jsonify(user=user, dishes=dishes, items=items)
 
 
 # Implement routes related to user
