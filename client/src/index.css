@@ -1,0 +1,10 @@
+* {
+    box-sizing: border-box;
+    font-family: 'SF Pro Display', sans-serif;
+}
+
+body {
+    background-color: #ffffff;
+    width: 100vw;
+    padding: 3% 25%;
+}

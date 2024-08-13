@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
 import {createBrowserRouter, RouterProvider} from 'react-router-dom';
+import './index.css';
 
 import {App} from './routes/app';
 import {MainPage} from './routes/main';
@@ -58,8 +59,8 @@ const router = createBrowserRouter([
             loader: async () => await fetch('/api/home/dish/add'),
           },
           {
-            path: 'home/dish/:id',
-            element: <FoodCard />,
+            path: 'dish/:id',
+            element: <StyledFoodCard className="food-cards" />,
             loader: foodCardLoader,
             action: updateDishAction,
           },
