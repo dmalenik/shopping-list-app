@@ -192,7 +192,7 @@ def dish_add():
     return jsonify(success=True)
 
 
-@app.route("/api/home/dish/<string:id>")
+@app.route("/api/home/dish/<id>")
 def dish(id):
     # Check if session is valid
     if "id" not in session:
