@@ -1,7 +1,7 @@
 import os
 import sys
 
-from flask import Flask, request, redirect, url_for, session, jsonify, Request
+from flask import Flask, request, redirect, url_for, session, jsonify, Request, send_from_directory
 from flask_session import Session
 
 from werkzeug.datastructures import ImmutableOrderedMultiDict
@@ -14,7 +14,7 @@ from dishes import get_dishes_list, get_dish, add_dish, update_dish, delete_dish
 from items import get_shopping_list, add_item, update_item, delete_item
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="build", static_url_path="/")
 app.config.from_pyfile('config.py')
 
 Session(app)
@@ -32,10 +32,45 @@ def func():
     session.modified = True
 
 
+# Handle unspecified routes
+# Handle client-side requests to the server for pages
 @app.route("/")
-def index():
-    # render build frontend static files here
-    return jsonify(success=True)
+def main_page():
+    return app.send_static_file("index.html")
+
+@app.route("/register")
+def register_page():
+    return app.send_static_file("index.html")
+
+
+@app.route("/login")
+def login_page():
+    return app.send_static_file("index.html")
+
+
+@app.route("/home")
+def home_page():
+    return send_from_directory(app.static_folder, "index.html")
+
+
+@app.route("/dish/add")
+def dish_add_page():
+    return send_from_directory(app.static_folder, "index.html")
+
+
+@app.route("/dish/<int:id>")
+def dish_id(id):
+    return app.send_static_file("index.html")
+
+
+@app.route("/list")
+def list_page():
+    return app.send_static_file("index.html")
+
+
+@app.route("/logout")
+def logout_page():
+    return app.send_static_file("index.html")
 
 
 # Implement routes related to user authentication
