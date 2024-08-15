@@ -30,9 +30,9 @@ const ShoppingList = ({className}) => {
   // or update shopping list state
   useEffect(
     () =>
-      data.logout
+      data?.logout
         ? setValue(false)
-        : setShoppingList(data.map(item => ({clicked: false, ...item}))),
+        : setShoppingList(data?.map(item => ({clicked: false, ...item}))),
     [data]
   );
 
@@ -44,7 +44,7 @@ const ShoppingList = ({className}) => {
       <main>
         {shoppingList ? (
           <ul>
-            {shoppingList.map(item => (
+            {shoppingList?.map(item => (
               <li key={item.id}>
                 {item.clicked ? (
                   <StyledUpdateShoppingListItem
