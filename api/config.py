@@ -18,6 +18,6 @@ load_dotenv()
 SECRET_KEY = os.environ["SECRET_KEY"]
 
 # Set uploads folder
-upload_folder = os.path.join("static", "uploads")
+upload_folder = os.path.join("build", "uploads")
 UPLOAD_FOLDER = upload_folder
 

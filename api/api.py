@@ -15,7 +15,7 @@ from items import get_shopping_list, add_item, update_item, delete_item
 
 
 app = Flask(__name__, static_folder="build", static_url_path="/")
-app.config.from_pyfile('config.py')
+app.config.from_pyfile("config.py")
 
 Session(app)
 
@@ -180,7 +180,8 @@ def dish_add():
             logo = request.files["logo"]
             path = os.path.join(app.config["UPLOAD_FOLDER"], logo.filename)
             logo.save(path)
-            dish["logo"] = path
+            # images are searched starting from index.html location not from build folder location  
+            dish["logo"] = path.replace("build", "")
 
         # Check if dish with the same name exists
         if dish_available(dish):
