@@ -233,9 +233,9 @@ def dish_update():
                 return jsonify(success=True)
 
         if request.form["action"] == "delete":
-            id, action = request.form.items(multi=True)
+            id, dishname, action = request.form.items(multi=True)
             # Create dish object to change
-            dish = dict(id=id[1], userid=session["id"])
+            dish = dict(id=id[1], userid=session["id"], name=dishname[1])
 
             # Delete dish data
             if dish_available(dish):

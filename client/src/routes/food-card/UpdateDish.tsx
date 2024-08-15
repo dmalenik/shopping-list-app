@@ -107,6 +107,7 @@ const UpdateDish = ({update, data, className}) => {
       </Form>
       <Form method="post" onSubmit={() => update()} className="dish-delete">
         <input type="hidden" name="id" value={updates?.id} />
+        <input type="hidden" name="dishname" value={updates?.name} />
         <input type="hidden" name="action" value="delete" />
         <button type="submit">Delete dish</button>
       </Form>
