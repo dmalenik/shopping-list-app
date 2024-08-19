@@ -14,8 +14,11 @@ const postUpdateUserData = async (formData: FormData) => {
       body: formData,
     });
     const finalResponse = (await response.json()) as {logout: boolean};
+    const action = formData.get('action');
 
-    return finalResponse.logout ? redirect('../login') : finalResponse;
+    return finalResponse.logout && action === 'delete'
+      ? redirect('../register')
+      : finalResponse;
   } catch (error) {
     return error;
   }
