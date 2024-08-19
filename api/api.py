@@ -9,7 +9,7 @@ from werkzeug.datastructures import ImmutableOrderedMultiDict
 sys.path.append(os.path.abspath("./db"))
 
 from users import register_user, update_user, delete_user, get_user, get_user_session_data
-from helpers import login_credentials_valid, register_credentials_valid, dish_available, item_exists, update_credentials_valid
+from helpers import login_credentials_valid, register_credentials_valid, dish_name_available, dish_id_available, item_exists, update_credentials_valid
 from dishes import get_dishes_list, get_dish, add_dish, update_dish, delete_dish
 from items import get_shopping_list, add_item, update_item, delete_item
 
@@ -184,7 +184,7 @@ def dish_add():
             dish["logo"] = path.replace("build", "")
 
         # Check if dish with the same name exists
-        if dish_available(dish):
+        if dish_name_available(dish):
             return jsonify(success=False)
 
         add_dish(dish)
@@ -228,7 +228,7 @@ def dish_update():
                 updates["ingridients"].append(ingridient)
             
             # Add dish updates to db    
-            if dish_available(dish):
+            if dish_id_available(dish):
                 update_dish(dish, updates)
                 return jsonify(success=True)
 
@@ -238,7 +238,7 @@ def dish_update():
             dish = dict(id=id[1], userid=session["id"], name=dishname[1])
 
             # Delete dish data
-            if dish_available(dish):
+            if dish_id_available(dish):
                 delete_dish(dish)
                 return jsonify(delete=True)
             

@@ -53,10 +53,19 @@ def update_credentials_valid(credentials):
 
 # Implement helper functions for dish data handling
 # Checks if dish exists in db
-def dish_available(dish):
+def dish_name_available(dish):
     with connect(db) as conn:
         with conn.cursor(cursor_factory=DictCursor) as curs:
             curs.execute(f"SELECT name FROM dishes WHERE name = %s;", (dish["name"],))
+            res = curs.fetchone()
+
+    return bool(res)
+
+# Checks if dish is available in the db
+def dish_id_available(dish):
+    with connect(db) as conn:
+        with conn.cursor(cursor_factory=DictCursor) as curs:
+            curs.execute(f"SELECT id FROM dishes WHERE id = %s;", (dish["id"],))
             res = curs.fetchone()
 
     return bool(res)
