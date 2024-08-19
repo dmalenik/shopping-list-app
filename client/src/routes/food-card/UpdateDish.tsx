@@ -15,7 +15,7 @@ const UpdateDish = ({update, data, className}) => {
             placeholder="Dish name"
             defaultValue={updates?.name}
             id="dishname"
-            autoComplete="on"
+            autoComplete="off"
           />
         </div>
         <div className="ingridients">
