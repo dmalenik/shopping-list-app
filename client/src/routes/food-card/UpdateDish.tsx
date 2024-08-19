@@ -25,33 +25,33 @@ const UpdateDish = ({update, data, className}) => {
               <div key={id} className="ingridient">
                 <fieldset className="fields">
                   <div className="controllers">
-                    <label htmlFor="name">Name</label>
+                    <label htmlFor={`name-${id}`}>Name</label>
                     <input
                       name="name"
                       placeholder="Name"
                       defaultValue={name}
-                      id="name"
-                      autoComplete="on"
+                      id={`name-${id}`}
+                      autoComplete="off"
                     />
                   </div>
                   <div className="controllers">
-                    <label htmlFor="quantity">Quantity</label>
+                    <label htmlFor={`quantity-${id}`}>Quantity</label>
                     <input
                       name="quantity"
                       placeholder="Quantity"
                       defaultValue={quantity}
-                      id="quantity"
-                      autoComplete="on"
+                      id={`quantity-${id}`}
+                      autoComplete="off"
                     />
                   </div>
                   <div className="controllers">
-                    <label htmlFor="unit">Unit</label>
+                    <label htmlFor={`unit-${id}`}>Unit</label>
                     <input
                       name="unit"
                       placeholder="unit"
                       defaultValue={unit}
-                      id="unit"
-                      autoComplete="on"
+                      id={`unit-${id}`}
+                      autoComplete="off"
                     />
                   </div>
                   <input type="hidden" name="id" id="id" defaultValue={id} />
