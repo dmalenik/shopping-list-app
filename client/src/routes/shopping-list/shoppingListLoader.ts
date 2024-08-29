@@ -1,1 +1,1 @@
-export const shoppingListLoader = async () => await fetch('/api/home/list');
+export const shoppingListLoader = async () => await fetch('/api/list');

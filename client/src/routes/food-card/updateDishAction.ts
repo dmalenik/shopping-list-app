@@ -8,7 +8,7 @@ export const updateDishAction = async ({request}: {request: Request}) => {
 
 const postDishUpdateData = async (formData: FormData) => {
   try {
-    const response = await fetch('/api/profile/dishes/update', {
+    const response = await fetch('/api/dish/update', {
       method: 'POST',
       mode: 'cors',
       body: formData,

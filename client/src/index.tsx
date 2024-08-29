@@ -56,7 +56,7 @@ const router = createBrowserRouter([
             path: 'dish/add',
             element: <StyledAddDish className="dish-add" />,
             action: addDishAction,
-            loader: async () => await fetch('/api/home/dish/add'),
+            loader: async () => await fetch('/api/dish/add'),
           },
           {
             path: 'dish/:id',

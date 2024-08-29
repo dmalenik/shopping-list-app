@@ -18,7 +18,7 @@ export const handleShoppingListItemAction = async ({
 
 const postShoppingListItemData = async (formData: FormData) => {
   try {
-    const response = await fetch('/api/home/item/add', {
+    const response = await fetch('/api/item/add', {
       method: 'POST',
       mode: 'cors',
       body: formData,
@@ -33,7 +33,7 @@ const postShoppingListItemData = async (formData: FormData) => {
 
 const postShoppingListUpdateData = async (formData: FormData) => {
   try {
-    const response = await fetch('/api/home/item/update', {
+    const response = await fetch('/api/item/update', {
       method: 'POST',
       mode: 'cors',
       body: formData,

@@ -12,6 +12,7 @@ from users import register_user, update_user, delete_user, get_user, get_user_se
 from helpers import login_credentials_valid, register_credentials_valid, dish_name_available, dish_id_available, item_exists, update_credentials_valid
 from dishes import get_dishes_list, get_dish, add_dish, update_dish, delete_dish
 from items import get_shopping_list, add_item, update_item, delete_item
+from routes import api, client
 
 
 app = Flask(__name__, static_folder="build", static_url_path="/")
@@ -34,48 +35,50 @@ def func():
 
 # Handle unspecified routes
 # Handle client-side requests to the server for pages
-@app.route("/")
+
+# TODO: generate each single file for each route
+@app.route(client["main"])
 def main_page():
     return app.send_static_file("index.html")
 
-@app.route("/register")
+@app.route(client["register"])
 def register_page():
     return app.send_static_file("index.html")
 
 
-@app.route("/login")
+@app.route(client["login"])
 def login_page():
     return app.send_static_file("index.html")
 
 
-@app.route("/home")
+@app.route(client["home"])
 def home_page():
     return send_from_directory(app.static_folder, "index.html")
 
 
-@app.route("/dish/add")
+@app.route(client["add_dish"])
 def dish_add_page():
     return send_from_directory(app.static_folder, "index.html")
 
 
-@app.route("/dish/<int:id>")
+@app.route(client["dish"])
 def dish_id(id):
     return app.send_static_file("index.html")
 
 
-@app.route("/list")
+@app.route(client["shopping_list"])
 def list_page():
     return app.send_static_file("index.html")
 
 
-@app.route("/logout")
+@app.route(client["logout"])
 def logout_page():
     return app.send_static_file("index.html")
 
 
 # Implement routes related to user authentication
 # Register
-@app.route("/api/register", methods=["GET", "POST"])
+@app.route(api["register"], methods=["GET", "POST"])
 def register():
     if request.method == "POST":
         credentials = dict(request.form)
@@ -88,7 +91,7 @@ def register():
 
 
 # Login
-@app.route("/api/login", methods=["GET", "POST"])
+@app.route(api["login"], methods=["GET", "POST"])
 def login():
     # Restart session every time a user logs in
     session.clear()
@@ -106,7 +109,7 @@ def login():
 
 
 # Logout user
-@app.route("/api/logout")
+@app.route(api["logout"])
 def logout():
     session.clear()
     
@@ -114,7 +117,7 @@ def logout():
 
 
 # Display home page 
-@app.route("/api/home")
+@app.route(api["home"])
 def home():
     # Check if session is valid
     if "id" not in session:
@@ -131,7 +134,7 @@ def home():
 # Implement routes related to user
 # Update user data
 # Delete user data
-@app.route("/api/user/update", methods=["GET", "POST"])
+@app.route(api["user_update"], methods=["GET", "POST"])
 def user_update():
     # Check if session is valid
     if "id" not in session:
@@ -156,7 +159,7 @@ def user_update():
 
 # Implement routes related to dishes
 # Create a route to add new dish
-@app.route("/api/home/dish/add", methods=["GET", "POST"])
+@app.route(api["add_dish"], methods=["GET", "POST"])
 def dish_add():
     # Check if session is valid
     if "id" not in session:
@@ -192,7 +195,7 @@ def dish_add():
     return jsonify(success=True)
 
 
-@app.route("/api/home/dish/<id>")
+@app.route(api["dish"])
 def dish(id):
     # Check if session is valid
     if "id" not in session:
@@ -204,7 +207,7 @@ def dish(id):
 
 
 # Create a route to edit dishes
-@app.route("/api/profile/dishes/update", methods=["GET", "POST"])
+@app.route(api["update_dish"], methods=["GET", "POST"])
 def dish_update():
     # Check if session is valid
     if "id" not in session:
@@ -247,7 +250,7 @@ def dish_update():
 
 # Implement routes related to shopping lists
 # Get current shopping lists related to a user
-@app.route("/api/home/list")
+@app.route(api["shopping_list"])
 def shopping_list():
     # Check if session is valid
     if "id" not in session:
@@ -260,7 +263,7 @@ def shopping_list():
 
 
 # Add new item to shopping list
-@app.route("/api/home/item/add", methods=["GET", "POST"])
+@app.route(api["add_item"], methods=["GET", "POST"])
 def item_add():
     # Check if session is valid
     if "id" not in session:
@@ -275,7 +278,7 @@ def item_add():
         return jsonify(success=True)
 
 
-@app.route("/api/home/item/update", methods=["GET", "POST"])
+@app.route(api["update_item"], methods=["GET", "POST"])
 def item_update():
     # Check if session is valid
     if "id" not in session:
